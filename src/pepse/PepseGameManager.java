@@ -11,16 +11,19 @@ import danogl.util.Vector2;
 import pepse.world.Block;
 import pepse.world.Sky;
 import pepse.world.Terrain;
+import pepse.world.daynight.Night;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class PepseGameManager extends GameManager {
-    ImageReader imageReader;
-    SoundReader soundReader;
-    UserInputListener inputListener;
-    WindowController windowController;
+    private static final float cycleLength=30;
+
+    private ImageReader imageReader;
+    private SoundReader soundReader;
+    private UserInputListener inputListener;
+    private WindowController windowController;
 
 
 
@@ -45,6 +48,9 @@ public class PepseGameManager extends GameManager {
         for(Block block : blocklist){
             gameObjects().addGameObject(block);
         }
+
+        GameObject night= Night.create(windowController.getWindowDimensions(),cycleLength);
+        gameObjects().addGameObject(night, Layer.FOREGROUND);
 
 
 
