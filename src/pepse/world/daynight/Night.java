@@ -13,6 +13,7 @@ public class Night {
     private static final String nightTag="night";
     private static final float initialValue=0;
     private static final Float MIDNIGHT_OPACITY = 0.5f;
+    private static final float TWO=2;
 
     public static GameObject create(Vector2 windowDimensions, float cycleLength){
         GameObject night = new GameObject(Vector2.ZERO, windowDimensions,
@@ -25,7 +26,7 @@ public class Night {
         initialValue, // initial transition value
         MIDNIGHT_OPACITY,// final transition value
         Transition.CUBIC_INTERPOLATOR_FLOAT,// use a cubic interpolator
-        cycleLength/2, // transition fully over half a day
+        cycleLength/TWO, // transition fully over half a day
         Transition.TransitionType.TRANSITION_BACK_AND_FORTH, // Choose appropriate ENUM value
         null
         );// nothing further to execute upon reaching final value
