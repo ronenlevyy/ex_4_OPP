@@ -13,6 +13,7 @@ import pepse.world.Sky;
 import pepse.world.Terrain;
 import pepse.world.daynight.Night;
 import pepse.world.daynight.Sun;
+import pepse.world.daynight.SunHalo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,8 @@ public class PepseGameManager extends GameManager {
     private WindowController windowController;
     private static GameObject night;
     private static GameObject sun;
+    private static GameObject sunHalo;
+    //public static final int SEED = 69420;
 
 
 
@@ -56,16 +59,12 @@ public class PepseGameManager extends GameManager {
         night= Night.create(windowController.getWindowDimensions(),cycleLength);
         gameObjects().addGameObject(night, Layer.FOREGROUND); // todo: ensure this is the correct layer
 
+
         sun= Sun.create(windowController.getWindowDimensions(),cycleLength);
         gameObjects().addGameObject(sun, Layer.BACKGROUND+1); // todo: ensure this is the correct layer
 
-
-
-
-
-
-
-
+        sunHalo= SunHalo.create(sun);
+        gameObjects().addGameObject(sunHalo, Layer.BACKGROUND+1); // todo: ensure this is the correct layer
 
 
 

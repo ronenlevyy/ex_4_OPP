@@ -14,12 +14,13 @@ public class Terrain {
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
     private Vector2 windowDimensions;
     private float groundHeightAtX0 ;
+    private static final float GROUND_HEIGHT_MULTIPLIER = (float) 2/3;
 
 
     //todo- seed isnt important until the unlimited part of the game
     public Terrain(Vector2 windowDimensions, int seed){
         this.windowDimensions = windowDimensions;
-        this.groundHeightAtX0 = windowDimensions.y() *  (float) 2/3;
+        this.groundHeightAtX0 = windowDimensions.y() *  GROUND_HEIGHT_MULTIPLIER;
     }
 
 

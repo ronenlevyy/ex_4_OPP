@@ -1,14 +1,14 @@
 package pepse.world.daynight;
-
 import danogl.GameObject;
 import danogl.components.Transition;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.util.Vector2;
-
+import pepse.world.Terrain;
 import java.awt.*;
-import java.lang.foreign.ValueLayout;
-import java.util.function.Consumer;
 
+/**
+ * This class is responsible for creating the sun GameObject.
+ */
 public class Sun {
 
     private static final String sunTag="sun";
@@ -18,6 +18,18 @@ public class Sun {
     private static final float finalValue=360;
     private static final Vector2 sunDimensions= new Vector2(100,100);
 
+    /**
+     * empty constructor.
+     */
+    public Sun(){
+    }
+
+    /**
+     * Creates a sun GameObject.
+     * @param windowDimensions
+     * @param cycleLength
+     * @return
+     */
     public static GameObject create(Vector2 windowDimensions, float cycleLength){
         GameObject sun= new GameObject(Vector2.ZERO, sunDimensions ,new OvalRenderable(Color.YELLOW));
         sun.setCoordinateSpace(danogl.components.CoordinateSpace.CAMERA_COORDINATES);
@@ -25,9 +37,11 @@ public class Sun {
 
 
         Vector2 initialSunCenter = new Vector2(windowDimensions.x()/TWO, windowDimensions.y()/THREE);
+//        Vector2 cycleCenter = new Vector2(windowDimensions.x()/TWO,
+//                new Terrain(windowDimensions, SEED).groundHeightAt(windowDimensions.x() / 2));
+
         Vector2 cycleCenter = new Vector2(windowDimensions.x()/TWO, windowDimensions.y() *(TWO/THREE));
 
-        // todo: change the position of the sun
 
 
         new Transition<Float>(
