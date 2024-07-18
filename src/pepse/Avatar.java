@@ -166,7 +166,7 @@ public class Avatar extends GameObject {
 
         // Update the energy display
         stringEnergy.accept(Integer.toString((int)this.avatarEnergy));
-        System.out.println(this.avatarEnergy);
+        // System.out.println(this.avatarEnergy);
     }
 
 

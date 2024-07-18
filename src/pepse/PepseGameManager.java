@@ -17,14 +17,14 @@ import pepse.world.daynight.SunHalo;
 import pepse.world.trees.Flora;
 import pepse.world.trees.Tree;
 
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class PepseGameManager extends GameManager {
-    private static final float cycleLength=30;
+    /**
+     * The length of the day-night cycle in seconds.
+     */
+    public static final float CYCLE_LENGTH=30;
 
     private ImageReader imageReader;
     private SoundReader soundReader;
@@ -34,7 +34,7 @@ public class PepseGameManager extends GameManager {
     private static GameObject sun;
     private static GameObject sunHalo;
     private static Avatar avatar;
-    public static final int SEED = 0;
+    public static final int SEED = 2;
 
 
 
@@ -54,6 +54,7 @@ public class PepseGameManager extends GameManager {
         Sky sky = new Sky();
         this.gameObjects().addGameObject(sky.create(windowController.getWindowDimensions()),
                 Layer.BACKGROUND);
+
     }
 
 //    private void initializeTerrain() {
@@ -181,27 +182,16 @@ public class PepseGameManager extends GameManager {
         initializeTerrain();
 
         //create - night
-        night= Night.create(windowController.getWindowDimensions(),cycleLength);
+        night= Night.create(windowController.getWindowDimensions(),CYCLE_LENGTH);
         gameObjects().addGameObject(night, Layer.FOREGROUND); // todo: ensure this is the correct layer
 
         //create - sun
-        sun= Sun.create(windowController.getWindowDimensions(),cycleLength);
+        sun= Sun.create(windowController.getWindowDimensions(),CYCLE_LENGTH);
         gameObjects().addGameObject(sun, Layer.BACKGROUND+1);
 
         //create - halo
         sunHalo= SunHalo.create(sun);
         gameObjects().addGameObject(sunHalo, Layer.BACKGROUND+1);
-
-        //create - trees
-        createTrees(tet, windowController.getWindowDimensions());
-
-
-
-
-
-    }
-
-    private void createTrees(Terrain tet, Vector2 windowDimensions){
 
         //create - energy
         AvatarEnergy energy = new AvatarEnergy(new Vector2(100, 100), new Vector2(30, 30),
@@ -213,18 +203,42 @@ public class PepseGameManager extends GameManager {
         avatar = new Avatar(new Vector2(850,650),inputListener,imageReader,energy::changeEnergy); //todo: this is a demo avatar we will need to make it more specific to the instructions
         gameObjects().addGameObject(avatar);
 
-        Flora flora= new Flora(SEED, tet);
-        ArrayList<Tree> treeList = flora.createInRange(0, (int) windowDimensions.x());
+        //create - trees
+        createTrees(tet, windowController.getWindowDimensions());
+
+
+
+
+
+    }
+
+    private void createTrees(Terrain tet, Vector2 windowDimensions){
+        Runnable fruitCollisionStrategyTask = () -> avatar.setEnergy(AvatarEnergy.FRUIT_ENERGY);
+        Flora flora= new Flora(SEED, tet, fruitCollisionStrategyTask);
+        List<Tree> treeList = flora.createInRange(0, (int) windowDimensions.x());
         for (Tree tree:treeList){
+            System.out.println(tree);
+            addGameObjects(tree.getTrunk(), Layer.STATIC_OBJECTS);
+            addGameObjects(tree.getLeaves(), Layer.FOREGROUND);
+            addGameObjects(tree.getFruits(), Layer.STATIC_OBJECTS);
             avatar.addJumpCallback(tree);
+
 
         }
 
 
 
-        //todo- we will set the camera when the infinite world will be ready to go
-        setCamera(new Camera(avatar, Vector2.ZERO, windowController.getWindowDimensions(), windowController.getWindowDimensions()));
 
+        //todo- we will set the camera when the infinite world will be ready to go
+        //setCamera(new Camera(avatar, Vector2.ZERO, windowController.getWindowDimensions(), windowController.getWindowDimensions()));
+
+    }
+
+    private void addGameObjects(Iterable<? extends GameObject> gameObjectIterable, int layer) {
+        for (GameObject gameObject: gameObjectIterable) {
+            gameObjects().addGameObject(gameObject, layer);
+            System.out.println("Game object added");
+        }
     }
 
     public static void main(String[] args) {

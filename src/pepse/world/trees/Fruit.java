@@ -22,10 +22,10 @@ public class Fruit extends GameObject implements CallbackAvatarJump {
     private FruitCollisionStrategy collisionStrategy;
 
 
-    public Fruit(Vector2 topLeftCorner){
+    public Fruit(Vector2 topLeftCorner, Runnable setEnergy){
         super(topLeftCorner, new Vector2(FRUIT_SIZE,FRUIT_SIZE),new OvalRenderable(FRUIT_COLOR));
         this.isEaten=false;
-        this.collisionStrategy = new FruitCollisionStrategy();
+        this.collisionStrategy = new FruitCollisionStrategy(setEnergy);
     }
 
     @Override

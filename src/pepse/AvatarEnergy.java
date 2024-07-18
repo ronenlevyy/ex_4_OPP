@@ -11,6 +11,7 @@ import danogl.util.Vector2;
 public class AvatarEnergy extends GameObject {
 
     private final TextRenderable readable;
+    public static final int FRUIT_ENERGY = 10;
 
 
     public AvatarEnergy(Vector2 topLeftCorner, Vector2 dimensions, TextRenderable readable) {

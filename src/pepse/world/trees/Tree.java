@@ -5,6 +5,7 @@ import pepse.CallbackAvatarJump;
 import pepse.world.Block;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -13,23 +14,29 @@ import java.util.Random;
 public class Tree implements CallbackAvatarJump {
     private static final String treeTag="tree";
     private static Vector2 topLeftCorner;
-    private static final int MIN_HEIGHT = 5;
-    private static final int MAX_HEIGHT = 10;
-    private static float treeHeight;
+    private static final float MIN_HEIGHT = 5.f;
+    private static final float MAX_HEIGHT = 8.f;
+    private static int treeHeight;
     private static Random rand;
-    private static ArrayList<Trunk> trunk;
+    private static List<Trunk> trunk;
     private static TreeTop treeTop;
+    private Runnable setEnergy;
 
-    public Tree(Vector2 topLeftCorner, Random rand){
-        this.topLeftCorner= topLeftCorner;
+    public Tree(Vector2 topLeftCorner, Random rand, Runnable setEnergy) {
+        this.topLeftCorner = topLeftCorner;
         this.rand = rand;
-        this.treeHeight = MIN_HEIGHT + rand.nextFloat() * (MAX_HEIGHT - MIN_HEIGHT);
+        this.treeHeight = (int) Math.ceil(MIN_HEIGHT + rand.nextFloat() * (MAX_HEIGHT - MIN_HEIGHT));
+        this.setEnergy=setEnergy;
+
         this.trunk = new ArrayList<>();
-        for (int i = 0; i < treeHeight; i++){
-            Vector2 placementVector= new Vector2(topLeftCorner.x(), topLeftCorner.y() - i* Block.SIZE);
+        for (int i = 0; i < treeHeight; i++) {
+            Vector2 placementVector = new Vector2(topLeftCorner.x(), topLeftCorner.y() - i * Block.SIZE);
             trunk.add(new Trunk(placementVector));
         }
-        this.treeTop = new TreeTop(topLeftCorner, treeHeight, rand);
+
+        this.treeTop = new TreeTop(topLeftCorner, rand, treeHeight, setEnergy);
+        System.out.println("Tree initialized at :"+ topLeftCorner.x()+", " +topLeftCorner.y()); // Debug print
+
 
     }
 
@@ -39,6 +46,18 @@ public class Tree implements CallbackAvatarJump {
         for (Trunk t : trunk){
             t.onJump();
         }
-        treeTop.onJump();
+        //treeTop.onJump();
+    }
+
+    public List<Leaf> getLeaves(){
+        return treeTop.getLeaves();
+    }
+
+    public List<Fruit> getFruits(){
+        return treeTop.getFruits();
+    }
+
+    public List<Trunk> getTrunk(){
+        return trunk;
     }
 }
