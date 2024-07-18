@@ -1,4 +1,4 @@
-package pepse.world;
+package pepse;
 
 import danogl.GameObject;
 import danogl.gui.rendering.TextRenderable;

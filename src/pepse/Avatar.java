@@ -1,4 +1,4 @@
-package pepse.world;
+package pepse;
 
 import danogl.GameObject;
 import danogl.gui.ImageReader;
@@ -8,6 +8,8 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class Avatar extends GameObject {
@@ -32,6 +34,7 @@ public class Avatar extends GameObject {
     private static final float GRAVITY = 600;
     private static final float MAX_JUMP_HEIGHT = 200;
     private boolean isJumping = false;
+    private final List<CallbackAvatarJump> callbackJump;
 
 
     private UserInputListener inputListener;
@@ -54,6 +57,7 @@ public class Avatar extends GameObject {
         this.stringEnergy = stringEnergy;
         this.avatarEnergy = START_ENERGY;
         this.isJumping = false;
+        this.callbackJump = new ArrayList<>();
         physics().preventIntersectionsFromDirection(Vector2.ZERO);
         transform().setAccelerationY(GRAVITY);
         createAnimations(imageReader);
@@ -201,6 +205,16 @@ public class Avatar extends GameObject {
             images[i] = imageReader.readImage(imagePaths[i], false);
         }
         return new AnimationRenderable(images, frameDuration);
+    }
+
+    public void addJumpCallback(CallbackAvatarJump callback) {
+        callbackJump.add(callback);
+    }
+
+    private void onJump() {
+        for (CallbackAvatarJump callback : callbackJump) {
+            callback.onJump();
+        }
     }
 
 
