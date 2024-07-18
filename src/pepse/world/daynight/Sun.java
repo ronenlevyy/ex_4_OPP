@@ -39,7 +39,7 @@ public class Sun {
         Vector2 initialSunCenter = new Vector2(windowDimensions.x()/TWO, windowDimensions.y()/THREE);
 //        Vector2 cycleCenter = new Vector2(windowDimensions.x()/TWO,
 //                new Terrain(windowDimensions, SEED).groundHeightAt(windowDimensions.x() / 2));
-
+    //Todo: decide if the above line is needed
         Vector2 cycleCenter = new Vector2(windowDimensions.x()/TWO, windowDimensions.y() *(TWO/THREE));
 
 

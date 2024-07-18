@@ -14,8 +14,11 @@ import pepse.world.*;
 import pepse.world.daynight.Night;
 import pepse.world.daynight.Sun;
 import pepse.world.daynight.SunHalo;
+import pepse.world.trees.Flora;
+import pepse.world.trees.Tree;
 
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +34,7 @@ public class PepseGameManager extends GameManager {
     private static GameObject sun;
     private static GameObject sunHalo;
     private static GameObject avatar;
-    //public static final int SEED = 69420;
+    public static final int SEED = 0;
 
 
 
@@ -170,6 +173,11 @@ public class PepseGameManager extends GameManager {
         maxX = Integer.MIN_VALUE;
 
         //create - ground
+        Terrain tet = new Terrain(windowController.getWindowDimensions(),SEED);
+        List<Block> blocklist = tet.createInRange(0, (int) windowController.getWindowDimensions().x());
+        for(Block block : blocklist){
+            gameObjects().addGameObject(block);
+        }
         initializeTerrain();
 
         //create - night
@@ -178,13 +186,22 @@ public class PepseGameManager extends GameManager {
 
         //create - sun
         sun= Sun.create(windowController.getWindowDimensions(),cycleLength);
-        gameObjects().addGameObject(sun, Layer.BACKGROUND+1); // todo: ensure this is the correct layer
+        gameObjects().addGameObject(sun, Layer.BACKGROUND+1);
 
-        //create - holo
+        //create - halo
         sunHalo= SunHalo.create(sun);
-        gameObjects().addGameObject(sunHalo, Layer.BACKGROUND+1); // todo: ensure this is the correct layer
+        gameObjects().addGameObject(sunHalo, Layer.BACKGROUND+1);
+
+        //create - trees
+        createTrees(tet, windowController.getWindowDimensions());
 
 
+
+
+
+    }
+
+    private void createTrees(Terrain tet, Vector2 windowDimensions){
 
         //create - energy
         AvatarEnergy energy = new AvatarEnergy(new Vector2(100, 100), new Vector2(30, 30),
@@ -195,6 +212,13 @@ public class PepseGameManager extends GameManager {
         //create - avatar
         avatar = new Avatar(new Vector2(850,650),inputListener,imageReader,energy::changeEnergy); //todo: this is a demo avatar we will need to make it more specific to the instructions
         gameObjects().addGameObject(avatar);
+
+        Flora flora= new Flora(SEED, tet);
+        ArrayList<Tree> treeList = flora.createInRange(0, (int) windowDimensions.x());
+        for (Tree tree:treeList){
+            //todo: add avatar jump callback
+        }
+
 
 
         //todo- we will set the camera when the infinite world will be ready to go
