@@ -15,7 +15,9 @@ import pepse.world.daynight.Night;
 import pepse.world.daynight.Sun;
 import pepse.world.daynight.SunHalo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class PepseGameManager extends GameManager {
@@ -33,12 +35,120 @@ public class PepseGameManager extends GameManager {
 
 
 
+    ///todo- in order to make infinite world we need this
+    private static final int BLOCK_SIZE = 50;
+    private static final int INITIAL_TERRAIN_WIDTH = 1500;
+    private int minX = Integer.MAX_VALUE;
+    private int maxX = Integer.MIN_VALUE;
+    private Terrain terrain;
+    private Map<Integer, List<Block>> createdBlocks;
+    //////////////////////////////////////////////////////
+
+
+
 
     private void initializeSky(){
         Sky sky = new Sky();
         this.gameObjects().addGameObject(sky.create(windowController.getWindowDimensions()),
                 Layer.BACKGROUND);
     }
+
+//    private void initializeTerrain() {
+//        Terrain terrain = new Terrain(windowController.getWindowDimensions(), 0);
+//        List<Block> blockList = terrain.createInRange(0, (int) windowController.getWindowDimensions().x());
+//        for (Block block : blockList) {
+//            gameObjects().addGameObject(block, Layer.STATIC_OBJECTS);
+//        }
+//    }
+
+
+    private void initializeTerrain() {
+        terrain = new Terrain(windowController.getWindowDimensions(), 0);
+        List<Block> blockList = terrain.createInRange(0, (int) windowController.getWindowDimensions().x());
+        for (Block block : blockList) {
+            gameObjects().addGameObject(block, Layer.STATIC_OBJECTS);
+        }
+        minX = 0;
+        maxX = (int) windowController.getWindowDimensions().x();
+    }
+
+
+    //todo this is a func to update infinite ground
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+        updateTerrain();
+    }
+    //todo this is a func to make infinite ground
+    private void updateTerrain() {
+        float avatarX = avatar.getTopLeftCorner().x();
+        int avatarBlockX = (int) Math.floor(avatarX / BLOCK_SIZE) * BLOCK_SIZE;
+
+        int newMinX = avatarBlockX - INITIAL_TERRAIN_WIDTH / 2;
+        int newMaxX = avatarBlockX + INITIAL_TERRAIN_WIDTH / 2;
+
+        // Add new blocks to the left
+        if (newMinX < minX) {
+            for (int x = newMinX; x < minX; x += BLOCK_SIZE) {
+                if (!createdBlocks.containsKey(x)) {
+                    List<Block> blocks = terrain.createInRange(x, x + BLOCK_SIZE);
+                    createdBlocks.put(x, blocks);
+                    for (Block block : blocks) {
+                        gameObjects().addGameObject(block, Layer.STATIC_OBJECTS);
+                    }
+                } else {
+                    List<Block> blocks = createdBlocks.get(x);
+                    for (Block block : blocks) {
+                        gameObjects().addGameObject(block, Layer.STATIC_OBJECTS);
+                    }
+                }
+            }
+            minX = newMinX;
+        }
+
+        // Add new blocks to the right
+        if (newMaxX > maxX) {
+            for (int x = maxX; x < newMaxX; x += BLOCK_SIZE) {
+                if (!createdBlocks.containsKey(x)) {
+                    List<Block> blocks = terrain.createInRange(x, x + BLOCK_SIZE);
+                    createdBlocks.put(x, blocks);
+                    for (Block block : blocks) {
+                        gameObjects().addGameObject(block, Layer.STATIC_OBJECTS);
+                    }
+                } else {
+                    List<Block> blocks = createdBlocks.get(x);
+                    for (Block block : blocks) {
+                        gameObjects().addGameObject(block, Layer.STATIC_OBJECTS);
+                    }
+                }
+            }
+            maxX = newMaxX;
+        }
+
+        // Remove blocks that are no longer in the visible range
+        for (int x = minX; x < newMinX; x += BLOCK_SIZE) {
+            if (createdBlocks.containsKey(x)) {
+                List<Block> blocks = createdBlocks.get(x);
+                for (Block block : blocks) {
+                    gameObjects().removeGameObject(block, Layer.STATIC_OBJECTS);
+                }
+            }
+        }
+        for (int x = maxX; x > newMaxX; x -= BLOCK_SIZE) {
+            if (createdBlocks.containsKey(x)) {
+                List<Block> blocks = createdBlocks.get(x);
+                for (Block block : blocks) {
+                    gameObjects().removeGameObject(block, Layer.STATIC_OBJECTS);
+                }
+            }
+        }
+    }
+
+
+
+
+
+
 
 
     @Override
@@ -50,16 +160,17 @@ public class PepseGameManager extends GameManager {
         this.inputListener = inputListener;
         this.windowController = windowController;
 
+        createdBlocks = new HashMap<>();
+
         //create - sky
         initializeSky();
 
+        // Initialize terrain boundaries
+        minX = Integer.MAX_VALUE;
+        maxX = Integer.MIN_VALUE;
 
         //create - ground
-        Terrain tet = new Terrain(windowController.getWindowDimensions(),0);
-        List<Block> blocklist = tet.createInRange(0, (int) windowController.getWindowDimensions().x());
-        for(Block block : blocklist){
-            gameObjects().addGameObject(block);
-        }
+        initializeTerrain();
 
         //create - night
         night= Night.create(windowController.getWindowDimensions(),cycleLength);
@@ -87,8 +198,7 @@ public class PepseGameManager extends GameManager {
 
 
         //todo- we will set the camera when the infinite world will be ready to go
-//        setCamera(new Camera(avatar, Vector2.ZERO, windowController.getWindowDimensions(),
-//                windowController.getWindowDimensions()));
+        setCamera(new Camera(avatar, Vector2.ZERO, windowController.getWindowDimensions(), windowController.getWindowDimensions()));
 
     }
 

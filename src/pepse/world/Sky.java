@@ -7,17 +7,13 @@ import danogl.util.Vector2;
 import java.awt.Color;
 
 /**
- * A class for Sky game object
+ * A class for Sky
  */
 public class Sky {
     private static final Color BASIC_SKY_COLOR = Color.decode("#80C6E5");
     private static final String skyTag = "sky";
 
-    /**
-     * Create a sky game object
-     * @param windowDimensions - the window dimensions
-     * @return the sky game object
-     */
+
     public static GameObject create(Vector2 windowDimensions) {
         GameObject sky = new GameObject(
                 Vector2.ZERO,

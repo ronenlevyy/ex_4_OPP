@@ -5,12 +5,15 @@ import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
+import pepse.util.NoiseGenerator;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Terrain {
+    private static final int TERRAIN_DEPTH = 20;
+    private NoiseGenerator noiseGenerator;
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
     private Vector2 windowDimensions;
     private float groundHeightAtX0 ;
@@ -21,6 +24,8 @@ public class Terrain {
     public Terrain(Vector2 windowDimensions, int seed){
         this.windowDimensions = windowDimensions;
         this.groundHeightAtX0 = windowDimensions.y() *  GROUND_HEIGHT_MULTIPLIER;
+        this.noiseGenerator = new NoiseGenerator(seed, (int) groundHeightAtX0);
+
     }
 
 
@@ -30,8 +35,12 @@ public class Terrain {
     ////////todo- the func isnt ready- we need to implement perline noise
     ////////todo- the func isnt ready- we need to implement perline noise
     public float groundHeightAt(float x) {
-        return groundHeightAtX0;
+        float noise = (float) noiseGenerator.noise(x, Block.SIZE * 7); // תוכל לשחק עם הפקטור כדי לקבל תוצאות טובות יותר
+        return groundHeightAtX0 + noise;
     }
+
+
+
 
     private Block createABlock(Vector2 coordinate){
         Renderable rectangleRenderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
@@ -39,11 +48,6 @@ public class Terrain {
         block.setTag("ground");
         return block;
     }
-
-
-
-
-
 
 
 
@@ -55,11 +59,10 @@ public class Terrain {
     public List<Block> createInRange(int minX, int maxX) {
         List<Block> blocksList = new ArrayList<>();
         float newMinX = calculateMinX(minX);
-        float startingY = windowDimensions.y()-Block.SIZE;
-        for (float x = newMinX ; x <= maxX ; x+=Block.SIZE){
+        for (float x = newMinX; x <= maxX; x += Block.SIZE) {
             float yCoord = groundHeightAt(x);
-            for (float y = startingY ; yCoord <= y; y-=Block.SIZE){
-                Block block = createABlock(new Vector2(x, y));
+            for (int i = 0; i < TERRAIN_DEPTH; i++) {
+                Block block = createABlock(new Vector2(x, yCoord + i * Block.SIZE));
                 blocksList.add(block);
             }
         }
