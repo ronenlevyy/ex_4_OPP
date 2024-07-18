@@ -2,26 +2,29 @@ package pepse.world.trees;
 
 import danogl.GameObject;
 import danogl.collisions.Collision;
-import danogl.collisions.GameObjectCollection;
 import danogl.gui.rendering.OvalRenderable;
+import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import pepse.CallbackAvatarJump;
+import pepse.util.ColorSupplier;
 import pepse.world.Block;
-import pepse.world.CollisionStrategies.CollisionStrategy;
 import pepse.world.CollisionStrategies.FruitCollisionStrategy;
+import java.util.HashSet;
+import java.util.Set;
 
 import java.awt.*;
+import java.util.Random;
 
-public class Fruit extends GameObject {
+public class Fruit extends GameObject implements CallbackAvatarJump {
     private static final float FRUIT_SIZE=Block.SIZE* 0.5f;
     private static final Color FRUIT_COLOR= Color.RED;
     private boolean isEaten;
-    private GameObjectCollection collection;
     private FruitCollisionStrategy collisionStrategy;
+
 
     public Fruit(Vector2 topLeftCorner){
         super(topLeftCorner, new Vector2(FRUIT_SIZE,FRUIT_SIZE),new OvalRenderable(FRUIT_COLOR));
         this.isEaten=false;
-        this.collection=collection;
         this.collisionStrategy = new FruitCollisionStrategy();
     }
 
@@ -34,4 +37,13 @@ public class Fruit extends GameObject {
 
         }
     }
+
+
+    @Override
+    public void onJump() {
+        Renderable fruitRenderable = new OvalRenderable(ColorSupplier.approximateColor(FRUIT_COLOR));
+        renderer().setRenderable(fruitRenderable);
+
+    }
+
 }

@@ -3,11 +3,13 @@ package pepse.world.trees;
 import danogl.components.Transition;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.util.Vector2;
+import pepse.CallbackAvatarJump;
+import pepse.util.ColorSupplier;
 import pepse.world.Block;
 
 import java.awt.*;
 
-public class Leaf extends Block {
+public class Leaf extends Block implements CallbackAvatarJump {
     private static final String leafTag="leaf";
     private static final Color leafColor = new Color(50,200,30);
     private static final float initialValueAngle = 0;
@@ -15,9 +17,11 @@ public class Leaf extends Block {
     private static final float initialValueWidth = 1;
     private static final float finalValueWidth = 1.1f;
     private static final float cycleLength = 3;
+    private static final float jumpSpinAngle = 90;
+    private static final float jumpSpinDuration = 1;
 
     public Leaf(Vector2 topLeftCorner){
-        super(topLeftCorner, new OvalRenderable(leafColor));
+        super(topLeftCorner, new OvalRenderable(ColorSupplier.approximateColor(leafColor)));
         setTag(leafTag);
     }
 
@@ -50,6 +54,18 @@ public class Leaf extends Block {
     }
 
 
+    @Override
+    public void onJump() {
 
-
+        new Transition<Float>(
+                this, // the game object being changed
+                (Float angle) -> renderer().setRenderableAngle(angle), // the method to call
+                renderer().getRenderableAngle(), // initial transition value
+                renderer().getRenderableAngle() + jumpSpinAngle, // final transition value
+                Transition.LINEAR_INTERPOLATOR_FLOAT,
+                jumpSpinDuration, // duration of the transition
+                Transition.TransitionType.TRANSITION_BACK_AND_FORTH, // Choose appropriate ENUM value
+                null // nothing further to execute upon reaching final value
+        ); // nothing further to execute upon reaching final value
+    }
 }
