@@ -1,6 +1,7 @@
 package pepse.world.trees;
 
 import danogl.util.Vector2;
+import pepse.CallbackAvatarJump;
 import pepse.world.Block;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.Random;
 /**
  * This class is responsible for creating the tree GameObject.
  */
-public class Tree {
+public class Tree implements CallbackAvatarJump {
     private static final String treeTag="tree";
     private static Vector2 topLeftCorner;
     private static final int MIN_HEIGHT = 5;
@@ -17,7 +18,7 @@ public class Tree {
     private static float treeHeight;
     private static Random rand;
     private static ArrayList<Trunk> trunk;
-    private static TreeTop top;
+    private static TreeTop treeTop;
 
     public Tree(Vector2 topLeftCorner, Random rand){
         this.topLeftCorner= topLeftCorner;
@@ -28,9 +29,16 @@ public class Tree {
             Vector2 placementVector= new Vector2(topLeftCorner.x(), topLeftCorner.y() - i* Block.SIZE);
             trunk.add(new Trunk(placementVector));
         }
-        this.top = new TreeTop(topLeftCorner, treeHeight, rand);
+        this.treeTop = new TreeTop(topLeftCorner, treeHeight, rand);
 
     }
 
 
+    @Override
+    public void onJump() {
+        for (Trunk t : trunk){
+            t.onJump();
+        }
+        treeTop.onJump();
+    }
 }

@@ -2,12 +2,13 @@ package pepse.world.trees;
 
 import danogl.collisions.GameObjectCollection;
 import danogl.util.Vector2;
+import pepse.CallbackAvatarJump;
 import pepse.world.Block;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class TreeTop{
+public class TreeTop implements CallbackAvatarJump {
     private static final int MAX_TOP_LEAVES = 10;
     private static final int MAX_TOP_FRUITS = 5;
     private final Vector2 topLeftCorner;
@@ -60,5 +61,23 @@ public class TreeTop{
             }
         }
 
+    }
+
+    public ArrayList<Leaf> getLeaves(){
+        return leaves;
+    }
+
+    public ArrayList<Fruit> getFruits(){
+        return fruits;
+    }
+
+    @Override
+    public void onJump() {
+        for (Leaf l : leaves){
+            l.onJump();
+        }
+        for (Fruit f : fruits){
+            f.onJump();
+        }
     }
 }

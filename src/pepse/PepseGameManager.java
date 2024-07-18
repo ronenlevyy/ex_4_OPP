@@ -33,7 +33,7 @@ public class PepseGameManager extends GameManager {
     private static GameObject night;
     private static GameObject sun;
     private static GameObject sunHalo;
-    private static GameObject avatar;
+    private static Avatar avatar;
     public static final int SEED = 0;
 
 
@@ -216,7 +216,8 @@ public class PepseGameManager extends GameManager {
         Flora flora= new Flora(SEED, tet);
         ArrayList<Tree> treeList = flora.createInRange(0, (int) windowDimensions.x());
         for (Tree tree:treeList){
-            //todo: add avatar jump callback
+            avatar.addJumpCallback(tree);
+
         }
 
 
