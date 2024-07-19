@@ -6,6 +6,7 @@ import danogl.gui.UserInputListener;
 import danogl.gui.rendering.AnimationRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import pepse.world.trees.Tree;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -42,7 +43,6 @@ public class Avatar extends GameObject {
     private float avatarEnergy;
 
 
-
     ////////////todo make sure it works well
     private AnimationRenderable noMoveAnimation;
     private AnimationRenderable jumpAnimation;
@@ -52,7 +52,7 @@ public class Avatar extends GameObject {
 
     ///todo the protractor has parameter not in the instractions
     public Avatar(Vector2 topLeftCorner, UserInputListener inputListener,
-                  ImageReader imageReader, Consumer<String> stringEnergy){
+                  ImageReader imageReader, Consumer<String> stringEnergy) {
         super(topLeftCorner, Vector2.ONES.mult(50), imageReader.readImage("assets/idle_0.png", false));
         this.inputListener = inputListener;
         this.stringEnergy = stringEnergy;
@@ -74,15 +74,14 @@ public class Avatar extends GameObject {
     }
 
     //// todo will use this in the future
-    public void setEnergy(float newEnergy){
-        if (this.avatarEnergy+newEnergy<=100){
+    public void setEnergy(float newEnergy) {
+        if (this.avatarEnergy + newEnergy <= 100) {
             this.avatarEnergy += newEnergy;
 
-        }
-        else {
+        } else {
             this.avatarEnergy = 100;
         }
-        stringEnergy.accept(Integer.toString((int)this.avatarEnergy));
+        stringEnergy.accept(Integer.toString((int) this.avatarEnergy));
     }
 
     private void moveAvatar() {
@@ -138,12 +137,9 @@ public class Avatar extends GameObject {
         transform().setVelocityX(xVel);
 
         // Update the energy display
-        stringEnergy.accept(Integer.toString((int)this.avatarEnergy));
+        stringEnergy.accept(Integer.toString((int) this.avatarEnergy));
         // System.out.println(this.avatarEnergy);
     }
-
-
-
 
 
     private void createAnimations(ImageReader imageReader) {
@@ -191,6 +187,8 @@ public class Avatar extends GameObject {
     }
 
 
-
+    public void removeJumpCallback(Tree tree) {
+        callbackJump.remove(tree);
+    }
 }
 
