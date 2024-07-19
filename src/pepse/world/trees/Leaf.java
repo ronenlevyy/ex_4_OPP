@@ -1,28 +1,32 @@
 package pepse.world.trees;
 
+import danogl.components.ScheduledTask;
 import danogl.components.Transition;
-import danogl.gui.rendering.OvalRenderable;
+import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.CallbackAvatarJump;
 import pepse.util.ColorSupplier;
 import pepse.world.Block;
 
 import java.awt.*;
+import java.util.Random;
 
 public class Leaf extends Block implements CallbackAvatarJump {
-    private static final String leafTag="leaf";
-    private static final Color leafColor = new Color(50,200,30);
-    private static final float initialValueAngle = 0;
-    private static final float finalValueAngle = 10;
-    private static final float initialValueWidth = 1;
-    private static final float finalValueWidth = 1.1f;
-    private static final float cycleLength = 3;
-    private static final float jumpSpinAngle = 90;
-    private static final float jumpSpinDuration = 1;
+    private static final String LEAF_TAG ="leaf";
+    private static final Color LEAF_COLOR = new Color(50,200,30);
+    private static final float INITIAL_VALUE_ANGLE = 0;
+    private static final float FINAL_VALUE_ANGLE = 10;
+    private static final float CYCLE_LENGTH = 3;
+    private static final float JUMP_SPIN_ANGLE = 90;
+    private static final float JUMP_SPIN_DURATION = 1;
+    private static final float SIZE = 28;
+    private static final float MAX_WIDTH = 33;
 
     public Leaf(Vector2 topLeftCorner){
-        super(topLeftCorner, new OvalRenderable(ColorSupplier.approximateColor(leafColor)));
-        setTag(leafTag);
+        super(topLeftCorner, new RectangleRenderable(ColorSupplier.approximateColor(LEAF_COLOR)));
+        Random rand = new Random();
+        new ScheduledTask(this, rand.nextFloat(), false, this::swayLeaf);
+        setTag(LEAF_TAG);
     }
 
     public void swayLeaf(){
@@ -31,26 +35,25 @@ public class Leaf extends Block implements CallbackAvatarJump {
         new Transition<Float>(
                 this, // the game object being changed
                 (Float angle) -> renderer().setRenderableAngle(angle),// the method to call
-                initialValueAngle, // initial transition value
-                finalValueAngle,// final transition value
+                INITIAL_VALUE_ANGLE, // initial transition value
+                FINAL_VALUE_ANGLE,// final transition value
                 Transition.LINEAR_INTERPOLATOR_FLOAT,
-                cycleLength, //
+                CYCLE_LENGTH, //
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH, // Choose appropriate ENUM value
                 null
         );// nothing further to execute upon reaching final value
 
-        // dimensions
-        new Transition<Float>(
-                this, // the game object being changed
-                (Float widthFactor) -> this.setDimensions(new Vector2(getDimensions()).mult(widthFactor)),
-                // the method to call
-                initialValueWidth, // initial transition value
-                finalValueWidth,// final transition value
-                Transition.LINEAR_INTERPOLATOR_FLOAT,
-                cycleLength, //
-                Transition.TransitionType.TRANSITION_BACK_AND_FORTH, // Choose appropriate ENUM value
-                null
-        );// nothing further to execute upon reaching final value
+    new Transition<>(
+            this, // the object to be related with the transition
+            this::setDimensions, // the function that will change the width
+            new Vector2(SIZE, SIZE), //initialized value
+            new Vector2(MAX_WIDTH, SIZE), //final value
+            Transition.CUBIC_INTERPOLATOR_VECTOR, // moving strategy
+            CYCLE_LENGTH, // cycle time
+            Transition.TransitionType.TRANSITION_BACK_AND_FORTH, // the transition type
+            null// the function to call
+    );
+
     }
 
 
@@ -61,9 +64,9 @@ public class Leaf extends Block implements CallbackAvatarJump {
                 this, // the game object being changed
                 (Float angle) -> renderer().setRenderableAngle(angle), // the method to call
                 renderer().getRenderableAngle(), // initial transition value
-                renderer().getRenderableAngle() + jumpSpinAngle, // final transition value
+                renderer().getRenderableAngle() + JUMP_SPIN_ANGLE, // final transition value
                 Transition.LINEAR_INTERPOLATOR_FLOAT,
-                jumpSpinDuration, // duration of the transition
+                JUMP_SPIN_DURATION, // duration of the transition
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH, // Choose appropriate ENUM value
                 null // nothing further to execute upon reaching final value
         ); // nothing further to execute upon reaching final value

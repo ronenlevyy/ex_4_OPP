@@ -15,8 +15,8 @@ public class TreeTop implements CallbackAvatarJump {
     private Random rand;
     private List <Leaf> leaves;
     private List <Fruit> fruits;
-    private static final double LEAF_PLANT_PROBABILITY = 0.6;
-    private static final double FRUIT_PLANT_PROBABILITY = 0.4;
+    private static final double LEAF_PLANT_PROBABILITY = 0.7;
+    private static final double FRUIT_PLANT_PROBABILITY = 0.5;
     private static final int SIZE= 5;
     private final Runnable setEnergy;
     private final int treeHeight;

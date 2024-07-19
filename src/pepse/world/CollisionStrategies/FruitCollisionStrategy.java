@@ -17,12 +17,14 @@ public class FruitCollisionStrategy implements CollisionStrategy{
 
     @Override
     public void onCollision(GameObject firstObject, GameObject secondObject) {
-        System.out.println("Fruit eaten");
         if (!isEaten){
-            setEnergy.run();
-            firstObject.renderer().setOpaqueness(0f); // make the fruit invisible
-            firstObject.physics().preventIntersectionsFromDirection(null);
             isEaten = true;
+
+            firstObject.physics().preventIntersectionsFromDirection(null);
+            firstObject.renderer().setOpaqueness(0f); // make the fruit invisible
+
+            setEnergy.run();
+
             new ScheduledTask(firstObject,CYCLE_LENGTH , false, () -> {
                 firstObject.renderer().setOpaqueness(1f); // make the fruit visible
                 firstObject.physics().preventIntersectionsFromDirection(Vector2.ZERO);

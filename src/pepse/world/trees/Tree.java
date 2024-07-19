@@ -16,18 +16,16 @@ import java.util.Random;
 public class Tree implements CallbackAvatarJump {
     private static final String treeTag="tree";
     private Vector2 topLeftCorner;
-    private static final float MIN_HEIGHT = 5.f;
-    private static final float MAX_HEIGHT = 8.f;
     private int treeHeight;
     private Random rand;
     private List<Trunk> trunk;
     private TreeTop treeTop;
     private Runnable setEnergy;
 
-    public Tree(Vector2 topLeftCorner, Random rand, Runnable setEnergy) {
+    public Tree(Vector2 topLeftCorner, Random rand, int treeHeight,Runnable setEnergy) {
         this.topLeftCorner = topLeftCorner;
         this.rand = rand;
-        this.treeHeight = (int) Math.ceil(MIN_HEIGHT + rand.nextFloat() * (MAX_HEIGHT - MIN_HEIGHT));
+        this.treeHeight =treeHeight;
         this.setEnergy=setEnergy;
 
         this.trunk = new ArrayList<>();
