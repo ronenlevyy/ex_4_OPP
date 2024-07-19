@@ -14,7 +14,7 @@ import java.util.Random;
  * This class is responsible for creating the tree GameObject.
  */
 public class Tree implements CallbackAvatarJump {
-    private static final String treeTag="tree";
+    private static final String treeTag = "tree";
     private Vector2 topLeftCorner;
     private int treeHeight;
     private Random rand;
@@ -22,11 +22,11 @@ public class Tree implements CallbackAvatarJump {
     private TreeTop treeTop;
     private Runnable setEnergy;
 
-    public Tree(Vector2 topLeftCorner, Random rand, int treeHeight,Runnable setEnergy) {
+    public Tree(Vector2 topLeftCorner, Random rand, int treeHeight, Runnable setEnergy) {
         this.topLeftCorner = topLeftCorner;
         this.rand = rand;
-        this.treeHeight =treeHeight;
-        this.setEnergy=setEnergy;
+        this.treeHeight = treeHeight;
+        this.setEnergy = setEnergy;
 
         this.trunk = new ArrayList<>();
         for (int i = 0; i < treeHeight; i++) {
@@ -42,7 +42,7 @@ public class Tree implements CallbackAvatarJump {
 
     @Override
     public void onJump() {
-        for (Trunk t : trunk){
+        for (Trunk t : trunk) {
             t.onJump();
         }
         treeTop.onJump();
@@ -60,16 +60,34 @@ public class Tree implements CallbackAvatarJump {
 //        return trunk;
 //    }
 
-    public void addTree(GameObjectCollection gameObjects){
-        for (Trunk t : trunk){
+    public void addTree(GameObjectCollection gameObjects) {
+        for (Trunk t : trunk) {
             gameObjects.addGameObject(t, Layer.STATIC_OBJECTS);
         }
-        for (Leaf l : treeTop.getLeaves()){
+        for (Leaf l : treeTop.getLeaves()) {
             gameObjects.addGameObject(l, Layer.FOREGROUND);
         }
-        for (Fruit f : treeTop.getFruits()){
+        for (Fruit f : treeTop.getFruits()) {
             gameObjects.addGameObject(f, Layer.STATIC_OBJECTS);
         }
+
+    }
+
+    public Vector2 getTopLeftCorner() {
+        return topLeftCorner;
+    }
+
+    public void removeTree(GameObjectCollection gameObjects) {
+        for (Trunk t : trunk) {
+            gameObjects.removeGameObject(t, Layer.STATIC_OBJECTS);
+        }
+        for (Leaf l : treeTop.getLeaves()) {
+            gameObjects.removeGameObject(l, Layer.FOREGROUND);
+        }
+        for (Fruit f : treeTop.getFruits()) {
+            gameObjects.removeGameObject(f, Layer.STATIC_OBJECTS);
+        }
+
 
     }
 }
