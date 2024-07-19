@@ -1,6 +1,7 @@
 package pepse.world.trees;
 
 import danogl.collisions.GameObjectCollection;
+import danogl.collisions.Layer;
 import danogl.util.Vector2;
 import pepse.CallbackAvatarJump;
 import pepse.world.Block;
@@ -49,27 +50,27 @@ public class Tree implements CallbackAvatarJump {
         //treeTop.onJump();
     }
 
-    public List<Leaf> getLeaves(){
-        return treeTop.getLeaves();
-    }
+//    public List<Leaf> getLeaves(){
+//        return treeTop.getLeaves();
+//    }
+//
+//    public List<Fruit> getFruits(){
+//        return treeTop.getFruits();
+//    }
 
-    public List<Fruit> getFruits(){
-        return treeTop.getFruits();
-    }
-
-    public List<Trunk> getTrunk(){
-        return trunk;
-    }
+//    public List<Trunk> getTrunk(){
+//        return trunk;
+//    }
 
     public void addTree(GameObjectCollection gameObjects){
         for (Trunk t : trunk){
-            gameObjects.addGameObject(t);
+            gameObjects.addGameObject(t, Layer.STATIC_OBJECTS);
         }
-        for (Leaf l : getLeaves()){
-            gameObjects.addGameObject(l);
+        for (Leaf l : treeTop.getLeaves()){
+            gameObjects.addGameObject(l, Layer.FOREGROUND);
         }
-        for (Fruit f : getFruits()){
-            gameObjects.addGameObject(f);
+        for (Fruit f : treeTop.getFruits()){
+            gameObjects.addGameObject(f, Layer.STATIC_OBJECTS);
         }
 
     }

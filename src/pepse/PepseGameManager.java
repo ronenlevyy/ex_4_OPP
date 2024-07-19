@@ -209,16 +209,12 @@ public class PepseGameManager extends GameManager {
     }
 
     private void createTrees(Terrain tet, Vector2 windowDimensions){
-        Runnable fruitCollisionStrategyTask = () -> avatar.setEnergy(AvatarEnergy.FRUIT_ENERGY);
-        Flora flora= new Flora(SEED, tet, fruitCollisionStrategyTask);
+        Runnable setEnergy = () -> avatar.setEnergy(AvatarEnergy.FRUIT_ENERGY);
+        Flora flora= new Flora(SEED, tet, setEnergy);
         List<Tree> treeList = flora.createInRange(0, (int) windowDimensions.x());
         for (Tree tree:treeList){
-            System.out.println(tree);
-            addGameObjects(tree.getTrunk(), Layer.STATIC_OBJECTS);
-            addGameObjects(tree.getLeaves(), Layer.FOREGROUND);
-            addGameObjects(tree.getFruits(), Layer.STATIC_OBJECTS);
             avatar.addJumpCallback(tree);
-
+            tree.addTree(gameObjects());
 
         }
 
@@ -226,15 +222,12 @@ public class PepseGameManager extends GameManager {
 
 
         //todo- we will set the camera when the infinite world will be ready to go
-        //setCamera(new Camera(avatar, Vector2.ZERO, windowController.getWindowDimensions(), windowController.getWindowDimensions()));
+        //setCamera(new Camera(avatar, Vector2.ZERO, windowController.getWindowDimensions(),
+        // windowController.getWindowDimensions()));
 
     }
 
-    private void addGameObjects(Iterable<? extends GameObject> gameObjectIterable, int layer) {
-        for (GameObject gameObject: gameObjectIterable) {
-            gameObjects().addGameObject(gameObject, layer);
-        }
-    }
+
 
     public static void main(String[] args) {
         new PepseGameManager().run();

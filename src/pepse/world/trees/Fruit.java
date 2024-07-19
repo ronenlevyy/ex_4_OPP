@@ -14,21 +14,19 @@ import java.awt.*;
 public class Fruit extends GameObject implements CallbackAvatarJump {
     private static final float FRUIT_SIZE=Block.SIZE* 0.5f;
     private static final Color FRUIT_COLOR= Color.RED;
-    private boolean isEaten;
     private FruitCollisionStrategy collisionStrategy;
 
 
     public Fruit(Vector2 topLeftCorner, Runnable setEnergy){
         super(topLeftCorner, new Vector2(FRUIT_SIZE,FRUIT_SIZE),new OvalRenderable(FRUIT_COLOR));
-        this.isEaten=false;
         this.collisionStrategy = new FruitCollisionStrategy(setEnergy);
     }
 
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
+        System.out.println("Fruit collided with "+other.getTag());
         super.onCollisionEnter(other, collision);
         if (other.getTag().equals("avatar")){
-            isEaten=true;
             collisionStrategy.onCollision(this, other);
 
         }

@@ -35,6 +35,7 @@ public class Avatar extends GameObject {
     private static final float MAX_JUMP_HEIGHT = 200;
     private boolean isJumping = false;
     private final List<CallbackAvatarJump> callbackJump;
+    private static final String AVATAR_TAG = "avatar";
 
 
     private UserInputListener inputListener;
@@ -61,8 +62,7 @@ public class Avatar extends GameObject {
         physics().preventIntersectionsFromDirection(Vector2.ZERO);
         transform().setAccelerationY(GRAVITY);
         createAnimations(imageReader);
-
-
+        this.setTag(AVATAR_TAG);
 
     }
 
