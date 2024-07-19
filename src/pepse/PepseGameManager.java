@@ -233,7 +233,6 @@ public class PepseGameManager extends GameManager {
     private void addGameObjects(Iterable<? extends GameObject> gameObjectIterable, int layer) {
         for (GameObject gameObject: gameObjectIterable) {
             gameObjects().addGameObject(gameObject, layer);
-            System.out.println("Game object added");
         }
     }
 

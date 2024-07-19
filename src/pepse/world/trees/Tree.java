@@ -36,7 +36,6 @@ public class Tree implements CallbackAvatarJump {
         }
 
         this.treeTop = new TreeTop(topLeftCorner, rand, treeHeight, setEnergy);
-        System.out.println("Tree initialized at :"+ topLeftCorner.x()+", " +topLeftCorner.y()); // Debug print
 
 
     }

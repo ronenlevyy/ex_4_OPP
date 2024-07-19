@@ -11,7 +11,7 @@ import java.util.Random;
 public class Flora {
     private Random rand;
     private static final double TREE_PLANT_PROBABILITY = 0.1;
-    private static Terrain tet;
+    private Terrain tet;
     private final Runnable setEnergy;
     private static final int MIN_DISTANCE_BETWEEN_TREES = 10;
 
@@ -35,7 +35,6 @@ public class Flora {
                 float y = (int) ((Math.floor(groundHeight / Block.SIZE) - 1) * Block.SIZE);
                 Vector2 treePosition = new Vector2(x, y);
                 Tree tree = new Tree(treePosition, rand, setEnergy);
-                System.out.println("Tree created at position: " + x + ", " + y); // Debug print
                 treeList.add(tree);
                 distanceFromLastTree = 0;
              }
@@ -43,7 +42,6 @@ public class Flora {
                 distanceFromLastTree++;
             }
         }
-        System.out.println("Total trees created: " + treeList.size()); // Debug print
         return treeList;
     }
 
