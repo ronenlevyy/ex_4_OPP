@@ -18,7 +18,7 @@ public class Leaf extends Block implements CallbackAvatarJump {
     private static final float FINAL_VALUE_ANGLE = 10;
     private static final float CYCLE_LENGTH = 3;
     private static final float JUMP_SPIN_ANGLE = 90;
-    private static final float JUMP_SPIN_DURATION = 1;
+    private static final float JUMP_SPIN_DURATION = 3;
     private static final float SIZE = 28;
     private static final float MAX_WIDTH = 33;
 
@@ -59,7 +59,6 @@ public class Leaf extends Block implements CallbackAvatarJump {
 
     @Override
     public void onJump() {
-
         new Transition<Float>(
                 this, // the game object being changed
                 (Float angle) -> renderer().setRenderableAngle(angle), // the method to call
@@ -67,7 +66,7 @@ public class Leaf extends Block implements CallbackAvatarJump {
                 renderer().getRenderableAngle() + JUMP_SPIN_ANGLE, // final transition value
                 Transition.LINEAR_INTERPOLATOR_FLOAT,
                 JUMP_SPIN_DURATION, // duration of the transition
-                Transition.TransitionType.TRANSITION_BACK_AND_FORTH, // Choose appropriate ENUM value
+                Transition.TransitionType.TRANSITION_ONCE, // Choose appropriate ENUM value
                 null // nothing further to execute upon reaching final value
         ); // nothing further to execute upon reaching final value
     }

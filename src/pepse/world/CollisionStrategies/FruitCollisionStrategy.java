@@ -8,7 +8,7 @@ import pepse.PepseGameManager;
 public class FruitCollisionStrategy implements CollisionStrategy{
     private Runnable setEnergy;
     private boolean isEaten;
-    private float CYCLE_LENGTH= PepseGameManager.CYCLE_LENGTH;
+    private static final float CYCLE_LENGTH= PepseGameManager.CYCLE_LENGTH;
 
     public FruitCollisionStrategy(Runnable setEnergy){
         this.setEnergy = setEnergy;

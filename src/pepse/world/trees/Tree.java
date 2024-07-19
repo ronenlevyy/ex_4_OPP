@@ -45,7 +45,7 @@ public class Tree implements CallbackAvatarJump {
         for (Trunk t : trunk){
             t.onJump();
         }
-        //treeTop.onJump();
+        treeTop.onJump();
     }
 
 //    public List<Leaf> getLeaves(){

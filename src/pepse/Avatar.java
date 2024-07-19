@@ -104,6 +104,12 @@ public class Avatar extends GameObject {
             this.isJumping = true;
             renderer().setRenderable(this.jumpAnimation);
             transform().setVelocityY(VELOCITY_Y);
+
+            // Call the onJump method of each CallbackAvatarJump object
+            for (CallbackAvatarJump callback : callbackJump) {
+                callback.onJump();
+            }
+
         } else if (getVelocity().y() == 0) {
             this.isJumping = false;
         }
