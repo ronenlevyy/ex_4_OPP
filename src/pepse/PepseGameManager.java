@@ -34,7 +34,7 @@ public class PepseGameManager extends GameManager {
     private static GameObject sun;
     private static GameObject sunHalo;
     private static Avatar avatar;
-    public static final int SEED = 2;
+    public static final int SEED = 0;
 
 
 
