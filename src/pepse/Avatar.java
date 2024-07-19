@@ -85,39 +85,6 @@ public class Avatar extends GameObject {
         stringEnergy.accept(Integer.toString((int)this.avatarEnergy));
     }
 
-
-//////////////////////////////////////
-///////////////////////////////////////
-/////////////the old move/////////////
-///////////////////////////////////////
-
-//    private void moveAvatar() {
-//        float xVel = 0;
-//        if (inputListener.isKeyPressed(KeyEvent.VK_LEFT) && this.avatarEnergy >= 0.5f) {
-//            xVel -= VELOCITY_X;
-//        }
-//        if (inputListener.isKeyPressed(KeyEvent.VK_RIGHT) && this.avatarEnergy >= 0.5f) {
-//            xVel += VELOCITY_X;
-//        }
-//        renderer().setRenderable(this.runAnimation);
-//        transform().setVelocityX(xVel);
-//        this.avatarEnergy -= 0.5f;
-//        if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && getVelocity().y() == 0 && this.avatarEnergy >= 10.0f) {
-//            this.avatarEnergy -= 10f;
-//            renderer().setRenderable(this.jumpAnimation);
-//            transform().setVelocityY(VELOCITY_Y);
-//        }
-//
-//        if (xVel == 0) {
-//            renderer().setRenderable(this.noMoveAnimation);
-//            if (this.avatarEnergy < START_ENERGY) {
-//                this.avatarEnergy += 1;
-//            }
-//        }
-//
-//        System.out.println(this.avatarEnergy);
-//        stringEnergy.accept(Integer.toString((int)this.avatarEnergy));
-//    }
     private void moveAvatar() {
         float xVel = 0;
 

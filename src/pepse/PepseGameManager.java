@@ -67,13 +67,16 @@ public class PepseGameManager extends GameManager {
 
 
     private void initializeTerrain() {
-        terrain = new Terrain(windowController.getWindowDimensions(), 0);
+        terrain = new Terrain(windowController.getWindowDimensions(), SEED);
         List<Block> blockList = terrain.createInRange(0, (int) windowController.getWindowDimensions().x());
         for (Block block : blockList) {
             gameObjects().addGameObject(block, Layer.STATIC_OBJECTS);
         }
         minX = 0;
         maxX = (int) windowController.getWindowDimensions().x();
+
+
+
     }
 
 
@@ -87,11 +90,9 @@ public class PepseGameManager extends GameManager {
     private void updateTerrain() {
         float avatarX = avatar.getTopLeftCorner().x();
         int avatarBlockX = (int) Math.floor(avatarX / BLOCK_SIZE) * BLOCK_SIZE;
-
         int newMinX = avatarBlockX - INITIAL_TERRAIN_WIDTH / 2;
         int newMaxX = avatarBlockX + INITIAL_TERRAIN_WIDTH / 2;
 
-        // Add new blocks to the left
         if (newMinX < minX) {
             for (int x = newMinX; x < minX; x += BLOCK_SIZE) {
                 if (!createdBlocks.containsKey(x)) {
@@ -100,17 +101,11 @@ public class PepseGameManager extends GameManager {
                     for (Block block : blocks) {
                         gameObjects().addGameObject(block, Layer.STATIC_OBJECTS);
                     }
-                } else {
-                    List<Block> blocks = createdBlocks.get(x);
-                    for (Block block : blocks) {
-                        gameObjects().addGameObject(block, Layer.STATIC_OBJECTS);
-                    }
                 }
             }
             minX = newMinX;
         }
 
-        // Add new blocks to the right
         if (newMaxX > maxX) {
             for (int x = maxX; x < newMaxX; x += BLOCK_SIZE) {
                 if (!createdBlocks.containsKey(x)) {
@@ -119,17 +114,11 @@ public class PepseGameManager extends GameManager {
                     for (Block block : blocks) {
                         gameObjects().addGameObject(block, Layer.STATIC_OBJECTS);
                     }
-                } else {
-                    List<Block> blocks = createdBlocks.get(x);
-                    for (Block block : blocks) {
-                        gameObjects().addGameObject(block, Layer.STATIC_OBJECTS);
-                    }
                 }
             }
             maxX = newMaxX;
         }
 
-        // Remove blocks that are no longer in the visible range
         for (int x = minX; x < newMinX; x += BLOCK_SIZE) {
             if (createdBlocks.containsKey(x)) {
                 List<Block> blocks = createdBlocks.get(x);
@@ -147,6 +136,7 @@ public class PepseGameManager extends GameManager {
             }
         }
     }
+
 
 
 
@@ -174,11 +164,6 @@ public class PepseGameManager extends GameManager {
         maxX = Integer.MIN_VALUE;
 
         //create - ground
-        Terrain tet = new Terrain(windowController.getWindowDimensions(),SEED);
-        List<Block> blocklist = tet.createInRange(0, (int) windowController.getWindowDimensions().x());
-        for(Block block : blocklist){
-            gameObjects().addGameObject(block);
-        }
         initializeTerrain();
 
         //create - night
@@ -200,11 +185,15 @@ public class PepseGameManager extends GameManager {
 
 
         //create - avatar
-        avatar = new Avatar(new Vector2(850,650),inputListener,imageReader,energy::changeEnergy); //todo: this is a demo avatar we will need to make it more specific to the instructions
-        gameObjects().addGameObject(avatar);
+        avatar = new Avatar(new Vector2(850,500),inputListener,imageReader,energy::changeEnergy); //todo: this is a demo avatar we will need to make it more specific to the instructions
+        gameObjects().addGameObject(avatar,Layer.DEFAULT);
 
         //create - trees
-        createTrees(tet, windowController.getWindowDimensions());
+        createTrees(terrain, windowController.getWindowDimensions());
+
+        //todo- we will set the camera when the infinite world will be ready to go
+        setCamera(new Camera(avatar, Vector2.ZERO, windowController.getWindowDimensions(),
+                windowController.getWindowDimensions()));
 
     }
 
@@ -217,14 +206,6 @@ public class PepseGameManager extends GameManager {
             tree.addTree(gameObjects());
 
         }
-
-
-
-
-        //todo- we will set the camera when the infinite world will be ready to go
-        //setCamera(new Camera(avatar, Vector2.ZERO, windowController.getWindowDimensions(),
-        // windowController.getWindowDimensions()));
-
     }
 
 
