@@ -39,7 +39,7 @@ public class PepseGameManager extends GameManager {
 
 
     ///todo- in order to make infinite world we need this
-    private static final int BLOCK_SIZE = 50;
+    private static final int BLOCK_SIZE = 30;
     private static final int INITIAL_TERRAIN_WIDTH = 1500;
     private int minX = Integer.MAX_VALUE;
     private int maxX = Integer.MIN_VALUE;
@@ -57,13 +57,7 @@ public class PepseGameManager extends GameManager {
 
     }
 
-//    private void initializeTerrain() {
-//        Terrain terrain = new Terrain(windowController.getWindowDimensions(), 0);
-//        List<Block> blockList = terrain.createInRange(0, (int) windowController.getWindowDimensions().x());
-//        for (Block block : blockList) {
-//            gameObjects().addGameObject(block, Layer.STATIC_OBJECTS);
-//        }
-//    }
+
 
 
     private void initializeTerrain() {
@@ -71,6 +65,7 @@ public class PepseGameManager extends GameManager {
         List<Block> blockList = terrain.createInRange(0, (int) windowController.getWindowDimensions().x());
         for (Block block : blockList) {
             gameObjects().addGameObject(block, Layer.STATIC_OBJECTS);
+            createdBlocks.computeIfAbsent((int) block.getTopLeftCorner().x(), k -> new ArrayList<>()).add(block);
         }
         minX = 0;
         maxX = (int) windowController.getWindowDimensions().x();
@@ -80,19 +75,20 @@ public class PepseGameManager extends GameManager {
     }
 
 
-    //todo this is a func to update infinite ground
+
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
         updateTerrain();
     }
-    //todo this is a func to make infinite ground
+
     private void updateTerrain() {
         float avatarX = avatar.getTopLeftCorner().x();
         int avatarBlockX = (int) Math.floor(avatarX / BLOCK_SIZE) * BLOCK_SIZE;
         int newMinX = avatarBlockX - INITIAL_TERRAIN_WIDTH / 2;
         int newMaxX = avatarBlockX + INITIAL_TERRAIN_WIDTH / 2;
 
+        // עדכון התחום התחתון
         if (newMinX < minX) {
             for (int x = newMinX; x < minX; x += BLOCK_SIZE) {
                 if (!createdBlocks.containsKey(x)) {
@@ -106,6 +102,7 @@ public class PepseGameManager extends GameManager {
             minX = newMinX;
         }
 
+        // עדכון התחום העליון
         if (newMaxX > maxX) {
             for (int x = maxX; x < newMaxX; x += BLOCK_SIZE) {
                 if (!createdBlocks.containsKey(x)) {
@@ -119,26 +116,31 @@ public class PepseGameManager extends GameManager {
             maxX = newMaxX;
         }
 
+        // מחיקת אובייקטים מחוץ לטווח התחום התחתון
         for (int x = minX; x < newMinX; x += BLOCK_SIZE) {
             if (createdBlocks.containsKey(x)) {
                 List<Block> blocks = createdBlocks.get(x);
                 for (Block block : blocks) {
                     gameObjects().removeGameObject(block, Layer.STATIC_OBJECTS);
                 }
+                createdBlocks.remove(x);
             }
         }
+
+        // מחיקת אובייקטים מחוץ לטווח התחום העליון
         for (int x = maxX; x > newMaxX; x -= BLOCK_SIZE) {
             if (createdBlocks.containsKey(x)) {
                 List<Block> blocks = createdBlocks.get(x);
                 for (Block block : blocks) {
                     gameObjects().removeGameObject(block, Layer.STATIC_OBJECTS);
                 }
+                createdBlocks.remove(x);
             }
         }
+
+        minX = newMinX;
+        maxX = newMaxX;
     }
-
-
-
 
 
 
@@ -160,8 +162,8 @@ public class PepseGameManager extends GameManager {
         initializeSky();
 
         // Initialize terrain boundaries
-        minX = Integer.MAX_VALUE;
-        maxX = Integer.MIN_VALUE;
+//        minX = Integer.MAX_VALUE;
+//        maxX = Integer.MIN_VALUE;
 
         //create - ground
         initializeTerrain();
