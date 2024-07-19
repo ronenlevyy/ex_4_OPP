@@ -1,5 +1,6 @@
 package pepse.world.trees;
 
+import danogl.collisions.GameObjectCollection;
 import danogl.util.Vector2;
 import pepse.CallbackAvatarJump;
 import pepse.world.Block;
@@ -13,13 +14,13 @@ import java.util.Random;
  */
 public class Tree implements CallbackAvatarJump {
     private static final String treeTag="tree";
-    private static Vector2 topLeftCorner;
+    private Vector2 topLeftCorner;
     private static final float MIN_HEIGHT = 5.f;
     private static final float MAX_HEIGHT = 8.f;
-    private static int treeHeight;
-    private static Random rand;
-    private static List<Trunk> trunk;
-    private static TreeTop treeTop;
+    private int treeHeight;
+    private Random rand;
+    private List<Trunk> trunk;
+    private TreeTop treeTop;
     private Runnable setEnergy;
 
     public Tree(Vector2 topLeftCorner, Random rand, Runnable setEnergy) {
@@ -59,5 +60,18 @@ public class Tree implements CallbackAvatarJump {
 
     public List<Trunk> getTrunk(){
         return trunk;
+    }
+
+    public void addTree(GameObjectCollection gameObjects){
+        for (Trunk t : trunk){
+            gameObjects.addGameObject(t);
+        }
+        for (Leaf l : getLeaves()){
+            gameObjects.addGameObject(l);
+        }
+        for (Fruit f : getFruits()){
+            gameObjects.addGameObject(f);
+        }
+
     }
 }

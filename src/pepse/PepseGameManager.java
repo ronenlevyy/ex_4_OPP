@@ -206,10 +206,6 @@ public class PepseGameManager extends GameManager {
         //create - trees
         createTrees(tet, windowController.getWindowDimensions());
 
-
-
-
-
     }
 
     private void createTrees(Terrain tet, Vector2 windowDimensions){

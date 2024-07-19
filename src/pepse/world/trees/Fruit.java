@@ -9,11 +9,7 @@ import pepse.CallbackAvatarJump;
 import pepse.util.ColorSupplier;
 import pepse.world.Block;
 import pepse.world.CollisionStrategies.FruitCollisionStrategy;
-import java.util.HashSet;
-import java.util.Set;
-
 import java.awt.*;
-import java.util.Random;
 
 public class Fruit extends GameObject implements CallbackAvatarJump {
     private static final float FRUIT_SIZE=Block.SIZE* 0.5f;
