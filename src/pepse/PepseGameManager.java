@@ -45,7 +45,13 @@ public class PepseGameManager extends GameManager {
     private int maxX = Integer.MIN_VALUE;
     private Terrain terrain;
     private Map<Integer, List<Block>> createdBlocks;
+
     //////////////////////////////////////////////////////
+
+
+
+
+
 
 
 
@@ -80,6 +86,7 @@ public class PepseGameManager extends GameManager {
     public void update(float deltaTime) {
         super.update(deltaTime);
         updateTerrain();
+
     }
 
     private void updateTerrain() {
@@ -162,42 +169,45 @@ public class PepseGameManager extends GameManager {
         initializeSky();
 
         // Initialize terrain boundaries
-//        minX = Integer.MAX_VALUE;
-//        maxX = Integer.MIN_VALUE;
+//    minX = Integer.MAX_VALUE;
+//    maxX = Integer.MIN_VALUE;
 
         //create - ground
         initializeTerrain();
 
         //create - night
-        night= Night.create(windowController.getWindowDimensions(),CYCLE_LENGTH);
+        night = Night.create(windowController.getWindowDimensions(), CYCLE_LENGTH);
         gameObjects().addGameObject(night, Layer.FOREGROUND); // todo: ensure this is the correct layer
 
         //create - sun
-        sun= Sun.create(windowController.getWindowDimensions(),CYCLE_LENGTH);
-        gameObjects().addGameObject(sun, Layer.BACKGROUND+1);
+        sun = Sun.create(windowController.getWindowDimensions(), CYCLE_LENGTH);
+        gameObjects().addGameObject(sun, Layer.BACKGROUND + 1);
 
         //create - halo
-        sunHalo= SunHalo.create(sun);
-        gameObjects().addGameObject(sunHalo, Layer.BACKGROUND+1);
+        sunHalo = SunHalo.create(sun);
+        gameObjects().addGameObject(sunHalo, Layer.BACKGROUND + 1);
 
         //create - energy
         AvatarEnergy energy = new AvatarEnergy(new Vector2(100, 100), new Vector2(30, 30),
                 new TextRenderable("100"));
         this.gameObjects().addGameObject(energy);
 
-
+        // Compute initial avatar position
+        float initialAvatarX = windowController.getWindowDimensions().x() / 2;
+        float groundHeight = terrain.groundHeightAt(initialAvatarX);
+        Vector2 initialAvatarPosition = new Vector2(initialAvatarX, groundHeight - 30); // Assuming avatar height is 30
         //create - avatar
-        avatar = new Avatar(new Vector2(850,500),inputListener,imageReader,energy::changeEnergy); //todo: this is a demo avatar we will need to make it more specific to the instructions
-        gameObjects().addGameObject(avatar,Layer.DEFAULT);
+        avatar = new Avatar(initialAvatarPosition, inputListener, imageReader, energy::changeEnergy);
+        gameObjects().addGameObject(avatar, Layer.DEFAULT);
 
         //create - trees
         createTrees(terrain, windowController.getWindowDimensions());
 
-        //todo- we will set the camera when the infinite world will be ready to go
-        setCamera(new Camera(avatar, Vector2.ZERO, windowController.getWindowDimensions(),
-                windowController.getWindowDimensions()));
 
+        setCamera(new Camera(avatar, windowController.getWindowDimensions().mult(0.5f).subtract(initialAvatarPosition),
+                windowController.getWindowDimensions(), windowController.getWindowDimensions()));
     }
+
 
     private void createTrees(Terrain tet, Vector2 windowDimensions){
         Runnable setEnergy = () -> avatar.setEnergy(AvatarEnergy.FRUIT_ENERGY);
