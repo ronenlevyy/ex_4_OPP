@@ -59,7 +59,8 @@ public class Terrain {
      * @return A new Block instance.
      */
     private Block createABlock(Vector2 coordinate) {
-        Renderable rectangleRenderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
+        Renderable rectangleRenderable = new RectangleRenderable(
+                ColorSupplier.approximateColor(BASE_GROUND_COLOR));
         Block block = new Block(coordinate, rectangleRenderable);
         block.setTag(TERRAIN_TAG);
         return block;

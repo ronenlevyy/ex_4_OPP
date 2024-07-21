@@ -17,7 +17,8 @@ import java.util.Set;
 
 
 /**
- * Represents a fruit in the game world. The fruit can change color on jump and has collision behavior with the avatar.
+ * Represents a fruit in the game world. The fruit can change color on jump and has collision behavior with
+ * the avatar.
  */
 public class Fruit extends GameObject implements CallbackAvatarJump {
     // Constants

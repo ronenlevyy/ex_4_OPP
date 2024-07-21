@@ -137,7 +137,8 @@ public class Avatar extends GameObject {
             this.avatarEnergy -= HALF;
         }
         // Check if the avatar is jumping and update energy
-        if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && getVelocity().y() == 0 && this.avatarEnergy >= TEN) {
+        if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && getVelocity().y() == 0 &&
+                this.avatarEnergy >= TEN) {
             this.avatarEnergy -= 10f;
             this.isJumping = true;
             renderer().setRenderable(this.jumpAnimation);
@@ -216,6 +217,11 @@ public class Avatar extends GameObject {
         return new AnimationRenderable(images, frameDuration);
     }
 
+    /**
+     * Adds a jump callback to the list of callbacks.
+     *
+     * @param callback The callback to add.
+     */
     public void addJumpCallback(CallbackAvatarJump callback) {
         callbackJump.add(callback);
     }

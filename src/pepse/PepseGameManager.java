@@ -50,7 +50,7 @@ public class PepseGameManager extends GameManager {
     private static final Vector2 ENERGY_SIZE = new Vector2(30, 30); // Size of the energy display
     // position
     private static final int TWO = 2;
-    public static final String ENERGY_CAPACITY = "100";
+    private static final String ENERGY_CAPACITY = "100";
     private static final float HALF = 0.5f;
     private static final int THIRTY = 30;
 
@@ -84,7 +84,8 @@ public class PepseGameManager extends GameManager {
         List<Block> blockList = terrain.createInRange(0, (int) windowController.getWindowDimensions().x());
         for (Block block : blockList) {
             gameObjects().addGameObject(block, Layer.STATIC_OBJECTS);
-            createdBlocks.computeIfAbsent((int) block.getTopLeftCorner().x(), k -> new ArrayList<>()).add(block);
+            createdBlocks.computeIfAbsent((int) block.getTopLeftCorner().x(),
+                    k -> new ArrayList<>()).add(block);
         }
         minX = 0;
         maxX = (int) windowController.getWindowDimensions().x();

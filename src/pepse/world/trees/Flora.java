@@ -50,7 +50,8 @@ public class Flora {
      */
     public ArrayList<Tree> createInRange(int minX, int maxX) {
         ArrayList<Tree> treeList = new ArrayList<>();
-        int cols = (int) Math.floor((float) (maxX - minX) / Block.SIZE); // the number of trees it is possible to add
+        int cols = (int) Math.floor((float) (maxX - minX) / Block.SIZE); // the number of trees
+        // it is possible to add
         if (minX % Block.SIZE != 0) {
             minX = minX - (minX % Block.SIZE);
         }
