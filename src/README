@@ -1,0 +1,58 @@
+ronenlevy133, karin.lein
+319130241, 322644733
+
+9.2.4.1. The trees package consists of six classes: Flora, Fruit, Leaf, Tree, TreeTop, and Trunk.
+
+Flora:
+    This class is responsible for managing the overall tree generation process.
+    It generates trees at random positions within a specified range. It ensures a natural distribution
+    by using a biased coin toss to determine tree locations. This class coordinates the creation of multiple tree
+    objects.
+
+Tree:
+   The Tree class represents a complete tree entity within the game. This class encapsulates the
+   logic for creating and managing the overall structure of the tree. It contains the logic for the tree's structure,
+   including its position, and the components that make it up, such as the trunk and tree top.
+
+
+Trunk:
+    Defines the trunk portion of a tree, consisting of multiple blocks stacked vertically. The Trunk class is
+    responsible for handling the visual and interactive aspects of the tree trunk, including changing its appearance
+    when the avatar jumps.
+
+TreeTop:
+    The TreeTop class manages the creation of the top part of the tree, which includes the leaves and the
+    fruits. The leafs and the fruits are created in a certain probability, allowing for variation in the tree's.
+    This class also ensures that the leaves and fruits are correctly positioned and aligned with the trunk.
+
+Leaf:
+    The Leaf class represents an individual leaf on the tree.ach Leaf object has properties such as swaying motion,
+    dimension changes over time, and spinning when the avatar jumps. This class is designed to create a dynamic and
+    realistic appearance for the tree leaves.
+
+Fruit:
+    Represents fruits that appear on the tree. Fruits have specific behaviors such as changing color when the avatar
+    jumps, disappearing upon collision with the avatar, and reappearing after a set period. This class handles the
+    lifecycle and interaction of fruits within the game world.
+
+
+9.2.4.2. The connections between the classes are as follows:
+
+    The Flora class creates instances of Tree, which consist of a Trunk and a TreeTop. The TreeTop class, in turn,
+    creates instances of Leaf and Fruit to populate the tree top. Each Tree object is composed of multiple Trunks
+    that stack vertically and a TreeTop that generates and manages Leaf and Fruit objects. The connections
+    ensure that when a tree is generated, it includes all its components (trunk, leaves, and fruits), and each
+    component can independently respond to game events like the avatar's jump.
+
+
+9.2.4.3. Yes, we used a design patterns in our implementation.
+
+    1. Observer Pattern: The CallbackAvatarJump interface acts as an observer, allowing various tree components to
+       react to the avatar's jump action. By implementing the onJump method, classes such as Leaf, Fruit, Trunk, and
+       Tree can independently respond to the jump event. This design pattern ensures that each component can have
+       custom behavior triggered by the same event, promoting decoupling and modularity.
+
+    2. Strategy Pattern: The FruitCollisionStrategy class is an example of the Strategy pattern. It encapsulates the
+       collision behavior of fruits, allowing the Fruit class to delegate the handling of collisions to different
+       strategies. This design pattern provides flexibility, enabling easy modifications or extensions of the collision
+       logic without altering the Fruit class itself.
