@@ -128,7 +128,6 @@ public class PepseGameManager extends GameManager {
 
     private void createNewTrees(int newMinX, int newMaxX) {
         if (newMinX < minX) {
-            System.out.println("newMinX: " + newMinX + ", newMaxX: " + newMaxX + ", minX: " + minX + ", maxX: " + maxX);
             createTreesInRange(newMinX - TREE_CREATION_BUFFER, minX);
         }
         if (newMaxX > maxX) {

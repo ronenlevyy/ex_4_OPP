@@ -28,9 +28,9 @@ public class Tree implements CallbackAvatarJump {
      * Constructs a new Tree instance.
      *
      * @param topLeftCorner The top-left corner of the tree's position.
-     * @param rand Random instance for generating tree attributes.
-     * @param treeHeight The height of the tree.
-     * @param setEnergy A runnable to set the energy.
+     * @param rand          Random instance for generating tree attributes.
+     * @param treeHeight    The height of the tree.
+     * @param setEnergy     A runnable to set the energy.
      */
     public Tree(Vector2 topLeftCorner, Random rand, int treeHeight, Runnable setEnergy) {
         this.topLeftCorner = topLeftCorner;
@@ -60,19 +60,6 @@ public class Tree implements CallbackAvatarJump {
         treeTop.onJump();
     }
 
-//    public List<Leaf> getLeaves(){
-//        return treeTop.getLeaves();
-//    }
-//
-//    public List<Fruit> getFruits(){
-//        return treeTop.getFruits();
-//    }
-
-//    public List<Trunk> getTrunk(){
-//        return trunk;
-//    }
-
-
 
     /**
      * Adds the tree and its components to the game objects.
@@ -90,41 +77,5 @@ public class Tree implements CallbackAvatarJump {
             gameObjects.addGameObject(f, Layer.STATIC_OBJECTS);
         }
 
-    }
-
-
-    /**
-     * Returns the top-left corner of the tree's position.
-     */
-    public Vector2 getTopLeftCorner() {
-        return topLeftCorner;
-    }
-
-
-    /**
-     * Removes the tree and its components from the game objects.
-     *
-     * @param gameObjects The collection of game objects.
-     */
-    public void removeTree(GameObjectCollection gameObjects) {
-        for (Trunk t : trunk) {
-            gameObjects.removeGameObject(t, Layer.STATIC_OBJECTS);
-        }
-        for (Leaf l : treeTop.getLeaves()) {
-            gameObjects.removeGameObject(l, Layer.FOREGROUND);
-        }
-        for (Fruit f : treeTop.getFruits()) {
-            gameObjects.removeGameObject(f, Layer.STATIC_OBJECTS);
-        }
-
-
-    }
-
-    public void setTopLeftCorner(Vector2 vector2) {
-        this.topLeftCorner = vector2;
-    }
-
-    public float getTreeHeight() {
-        return treeHeight;
     }
 }

@@ -3,6 +3,7 @@ package pepse.world.trees;
 import danogl.util.Vector2;
 import pepse.world.Block;
 import pepse.world.Terrain;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -23,12 +24,11 @@ public class Flora {
     private int rightmostTreeX = Integer.MIN_VALUE;
 
 
-
     /**
      * Constructs a new Flora instance.
      *
-     * @param seed The seed for the random number generator.
-     * @param tet The terrain object to determine ground height.
+     * @param seed      The seed for the random number generator.
+     * @param tet       The terrain object to determine ground height.
      * @param setEnergy A runnable to set the energy when a tree is created.
      */
     public Flora(int seed, Terrain tet, Runnable setEnergy) {
@@ -74,9 +74,7 @@ public class Flora {
                 if (x > rightmostTreeX) {
                     rightmostTreeX = (int) x;
                 }
-
             }
-
         }
         return treeList;
     }
