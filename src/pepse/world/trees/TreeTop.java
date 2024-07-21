@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+
+/**
+ * This class is responsible for creating and managing the tree top,
+ * including the leaves and fruits in the game.
+ */
 public class TreeTop implements CallbackAvatarJump {
 //    private static final int MAX_TOP_LEAVES = 10;
 //    private static final int MAX_TOP_FRUITS = 5;
@@ -24,6 +29,14 @@ public class TreeTop implements CallbackAvatarJump {
     private boolean[][] is_occupied;
 
 
+    /**
+     * Constructs a new TreeTop instance.
+     *
+     * @param topLeftCorner The top-left corner of the tree's position.
+     * @param rand          Random instance for generating tree attributes.
+     * @param treeHeight    The height of the tree.
+     * @param setEnergy     A runnable to set the energy.
+     */
     public TreeTop(Vector2 topLeftCorner, Random rand, int treeHeight, Runnable setEnergy){
         this.topLeftCorner= topLeftCorner.subtract(new Vector2(Block.SIZE,Block.SIZE).mult(TREE_TOP_SIZE))
         .subtract(new Vector2(0,Block.SIZE* treeHeight));
@@ -38,7 +51,9 @@ public class TreeTop implements CallbackAvatarJump {
     }
 
 
-
+    /**
+     * Initializes the occupation matrix for the tree top.
+     */
     private void initOccupation(){
         for (int i=0; i<SIZE; i++){
             for (int j=0; j<SIZE; j++){
@@ -47,6 +62,10 @@ public class TreeTop implements CallbackAvatarJump {
         }
     }
 
+
+    /**
+     * Creates the leaves of the tree top.
+     */
     public void createLeaves(){
         leaves = new ArrayList<>();
         int leafCount = 0; //todo: erase
@@ -66,10 +85,13 @@ public class TreeTop implements CallbackAvatarJump {
         }
     }
 
+
+    /**
+     * Creates the fruits of the tree top.
+     */
     public void createFruits(){
         fruits = new ArrayList<>();
         int fruitCount = 0;
-
         for (int i=0; i< SIZE; i++){
             for (int j=0; j< SIZE; j++){
                 if (rand.nextFloat() < FRUIT_PLANT_PROBABILITY && !is_occupied[i][j]){
@@ -85,15 +107,27 @@ public class TreeTop implements CallbackAvatarJump {
         }
 
     }
-
+    /**
+     * Returns the list of leaves.
+     *
+     */
     public List<Leaf> getLeaves(){
         return leaves;
     }
 
+
+    /**
+     * Returns the list of fruits.
+     *
+     */
     public List<Fruit> getFruits(){
         return fruits;
     }
 
+
+    /**
+     * Handles the jump action, making all leaves and fruits react to the jump.
+     */
     @Override
     public void onJump() {
         for (Leaf l : leaves){

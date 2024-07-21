@@ -6,27 +6,32 @@ import danogl.util.Vector2;
 
 
 /**
- * This class represents the energy rendered on the Pepsi game.
+ * This class represents the energy display for the avatar.
+ * It updates the displayed energy percentage based on the avatar's current energy level.
  */
 public class AvatarEnergy extends GameObject {
 
     private final TextRenderable readable;
     public static final int FRUIT_ENERGY = 10;
 
-
+    /**
+     * Constructs a new AvatarEnergy instance.
+     *
+     * @param topLeftCorner The initial position of the energy display.
+     * @param dimensions The dimensions of the energy display.
+     * @param readable The text renderable used to display the energy percentage.
+     */
     public AvatarEnergy(Vector2 topLeftCorner, Vector2 dimensions, TextRenderable readable) {
         super(topLeftCorner, dimensions, readable);
         this.readable = readable;
     }
 
-
     /**
-     *  used as callback in the Avatar class. It is used to update the rendered energy of the avatar.
-     * @param s - the avatars energy as a string
+     * Updates the displayed energy percentage.
+     *
+     * @param str The new energy percentage to display.
      */
-    public void changeEnergy(String s){
-        this.readable.setString(s +"%");
+    public void changeEnergy(String str){
+        this.readable.setString(str + "%");
     }
-
-
 }

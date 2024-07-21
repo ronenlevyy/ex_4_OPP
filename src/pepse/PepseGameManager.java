@@ -23,40 +23,31 @@ import java.util.*;
 
 
 public class PepseGameManager extends GameManager {
-    /**
-     * The length of the day-night cycle in seconds.
-     */
+
+
+    private static final int TREE_CREATION_BUFFER = 200; // Create trees 500 pixels ahead
     public static final float CYCLE_LENGTH = 30;
-    public static final int SEED = 0;
-    private static final int TREE_CREATION_BUFFER = 200; // Create trees 200 pixels ahead
     private static final int BLOCK_SIZE = 30;
     private static final int INITIAL_TERRAIN_WIDTH = 1500;
+    private WindowController windowController;
     private static GameObject night;
     private static GameObject sun;
     private static GameObject sunHalo;
     private static Avatar avatar;
-    private ImageReader imageReader;
-    private SoundReader soundReader;
-    private UserInputListener inputListener;
-    private WindowController windowController;
+    public static final int SEED = 0;
     private Flora flora;
+
     private int minX = Integer.MAX_VALUE;
     private int maxX = Integer.MIN_VALUE;
     private Terrain terrain;
     private Map<Integer, List<Block>> createdBlocks;
     private List<Tree> treeList;
 
-    //////////////////////////////////////////////////////
-
-    public static void main(String[] args) {
-        new PepseGameManager().run();
-    }
 
     private void initializeSky() {
         Sky sky = new Sky();
         this.gameObjects().addGameObject(Sky.create(windowController.getWindowDimensions()),
                 Layer.BACKGROUND);
-
     }
 
     private void initializeTerrain() {
@@ -161,12 +152,9 @@ public class PepseGameManager extends GameManager {
     }
 
     @Override
-    public void initializeGame(ImageReader imageReader, SoundReader soundReader,
-                               UserInputListener inputListener, WindowController windowController) {
+    public void initializeGame(ImageReader imageReader, SoundReader soundReader, UserInputListener
+            inputListener, WindowController windowController) {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
-        this.imageReader = imageReader;
-        this.soundReader = soundReader;
-        this.inputListener = inputListener;
         this.windowController = windowController;
         createdBlocks = new HashMap<>();
 
@@ -214,5 +202,7 @@ public class PepseGameManager extends GameManager {
                 windowController.getWindowDimensions(), windowController.getWindowDimensions()));
     }
 
-
+    public static void main(String[] args) {
+        new PepseGameManager().run();
+    }
 }

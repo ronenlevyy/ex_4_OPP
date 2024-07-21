@@ -3,7 +3,6 @@ package pepse.world.daynight;
 import danogl.GameObject;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.util.Vector2;
-
 import java.awt.*;
 
 /**

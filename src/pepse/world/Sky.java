@@ -7,19 +7,24 @@ import danogl.util.Vector2;
 import java.awt.Color;
 
 /**
- * A class for Sky
+ * A class representing the sky in the game.
+ * The sky is a simple rectangle that covers the entire window and serves as the background.
  */
 public class Sky {
-    private static final Color BASIC_SKY_COLOR = Color.decode("#80C6E5");
-    private static final String skyTag = "sky";
 
-
+    private static final Color BASIC_SKY_COLOR = Color.decode("#80C6E5"); // The basic color of the sky.
+    private static final String skyTag = "sky";     // The tag to identify the sky game object.
+    /**
+     * Creates a sky game object.
+     *
+     * @param windowDimensions The dimensions of the game window.
+     * @return A GameObject representing the sky.
+     */
     public static GameObject create(Vector2 windowDimensions) {
         GameObject sky = new GameObject(
                 Vector2.ZERO,
                 windowDimensions,
                 new RectangleRenderable(BASIC_SKY_COLOR));
-
         sky.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         sky.setTag(skyTag);
         return sky;

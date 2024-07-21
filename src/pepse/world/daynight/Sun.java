@@ -31,7 +31,7 @@ public class Sun {
      *
      * @param windowDimensions
      * @param cycleLength
-     * @return
+     * @return sun
      */
     public static GameObject create(Vector2 windowDimensions, float cycleLength) {
         GameObject sun = new GameObject(Vector2.ZERO, sunDimensions, new OvalRenderable(Color.YELLOW));
