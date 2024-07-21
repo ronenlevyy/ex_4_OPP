@@ -21,35 +21,54 @@ import pepse.world.trees.Tree;
 
 import java.util.*;
 
-
+/**
+ * The main game manager class for the Pepse game.
+ * It handles the initialization, updates, and rendering of the game world.
+ */
 public class PepseGameManager extends GameManager {
 
 
-    private static final int TREE_CREATION_BUFFER = 200; // Create trees 500 pixels ahead
+    ///////////////
+    // Constants //
+    ///////////////
     public static final float CYCLE_LENGTH = 30;
+    public static final int SEED = 0;
+    private static final int TREE_CREATION_BUFFER = 200; // Create trees 200 pixels ahead
     private static final int BLOCK_SIZE = 30;
     private static final int INITIAL_TERRAIN_WIDTH = 1500;
+
+    ////////////////////////
+    // Instance Variables //
+    ////////////////////////
     private WindowController windowController;
+    private Terrain terrain;
+    private Flora flora;
+    private Avatar avatar;
+    private AvatarEnergy energy;
+    private List<Tree> treeList;
+    private Map<Integer, List<Block>> createdBlocks;
+    private int minX = Integer.MAX_VALUE;
+    private int maxX = Integer.MIN_VALUE;
+
+    /////////////////////////
+    // Static Game Objects //
+    /////////////////////////
     private static GameObject night;
     private static GameObject sun;
     private static GameObject sunHalo;
-    private static Avatar avatar;
-    public static final int SEED = 0;
-    private Flora flora;
 
-    private int minX = Integer.MAX_VALUE;
-    private int maxX = Integer.MIN_VALUE;
-    private Terrain terrain;
-    private Map<Integer, List<Block>> createdBlocks;
-    private List<Tree> treeList;
-
-
+    /**
+     * Initializes the sky in the game world.
+     */
     private void initializeSky() {
         Sky sky = new Sky();
         this.gameObjects().addGameObject(Sky.create(windowController.getWindowDimensions()),
                 Layer.BACKGROUND);
     }
 
+    /**
+     * Initializes the terrain in the game world.
+     */
     private void initializeTerrain() {
         terrain = new Terrain(windowController.getWindowDimensions(), SEED);
         List<Block> blockList = terrain.createInRange(0, (int) windowController.getWindowDimensions().x());
@@ -61,13 +80,31 @@ public class PepseGameManager extends GameManager {
         maxX = (int) windowController.getWindowDimensions().x();
     }
 
+    /**
+     * Updates the position of the energy display to be relative to the camera's x position.
+     */
+    private void updateEnergyPosition() {
+        float cameraX = avatar.getTopLeftCorner().x() - windowController.getWindowDimensions().x() / 2;
+        Vector2 energyPosition = new Vector2(cameraX + 100, 100); // 100 is the original y-coordinate
+        energy.setTopLeftCorner(energyPosition);
+    }
+
+
+    /**
+     * Updates override of update to contain updateTerrain and updateEnergyPosition;
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
         updateTerrain();
+        updateEnergyPosition();
 
     }
 
+
+    /**
+     * Updates the terrain and trees in the game world based on the avatar's position.
+     */
     private void updateTerrain() {
         int[] newBounds = calculateNewBounds();
         updateTerrainBlocks(newBounds[0], newBounds[1]);
@@ -75,6 +112,10 @@ public class PepseGameManager extends GameManager {
         updateBounds(newBounds[0], newBounds[1]);
     }
 
+    /**
+     * Calculates the new bounds for the terrain based on the avatar's position.
+     * @return An array containing the new minimum and maximum x coordinates.
+     */
     private int[] calculateNewBounds() {
         float avatarX = avatar.getTopLeftCorner().x();
         int avatarBlockX = (int) Math.floor(avatarX / BLOCK_SIZE) * BLOCK_SIZE;
@@ -83,11 +124,23 @@ public class PepseGameManager extends GameManager {
         return new int[]{newMinX, newMaxX};
     }
 
+
+    /**
+     * Updates the terrain blocks within the new bounds.
+     * @param newMinX The new minimum x coordinate.
+     * @param newMaxX The new maximum x coordinate.
+     */
     private void updateTerrainBlocks(int newMinX, int newMaxX) {
         createNewTerrainBlocks(newMinX, newMaxX);
         removeOldTerrainBlocks(newMinX, newMaxX);
     }
 
+
+    /**
+     * Creates new terrain blocks within the specified range.
+     * @param newMinX The new minimum x coordinate.
+     * @param newMaxX The new maximum x coordinate.
+     */
     private void createNewTerrainBlocks(int newMinX, int newMaxX) {
         if (newMinX < minX) {
             createBlocksInRange(newMinX, minX);
@@ -97,6 +150,12 @@ public class PepseGameManager extends GameManager {
         }
     }
 
+
+    /**
+     * Creates blocks within the specified range.
+     * @param start The starting x coordinate.
+     * @param end The ending x coordinate.
+     */
     private void createBlocksInRange(int start, int end) {
         for (int x = start; x < end; x += BLOCK_SIZE) {
             if (!createdBlocks.containsKey(x)) {
@@ -109,11 +168,23 @@ public class PepseGameManager extends GameManager {
         }
     }
 
+
+    /**
+     * Removes old terrain blocks outside the specified range.
+     * @param newMinX The new minimum x coordinate.
+     * @param newMaxX The new maximum x coordinate.
+     */
     private void removeOldTerrainBlocks(int newMinX, int newMaxX) {
         removeBlocksOutsideRange(minX, newMinX);
         removeBlocksOutsideRange(newMaxX, maxX);
     }
 
+
+    /**
+     * Removes blocks outside the specified range.
+     * @param start The starting x coordinate.
+     * @param end The ending x coordinate.
+     */
     private void removeBlocksOutsideRange(int start, int end) {
         for (int x = start; x < end; x += BLOCK_SIZE) {
             if (createdBlocks.containsKey(x)) {
@@ -126,6 +197,12 @@ public class PepseGameManager extends GameManager {
         }
     }
 
+
+    /**
+     * Creates new trees within the specified range.
+     * @param newMinX The new minimum x coordinate.
+     * @param newMaxX The new maximum x coordinate.
+     */
     private void createNewTrees(int newMinX, int newMaxX) {
         if (newMinX < minX) {
             createTreesInRange(newMinX - TREE_CREATION_BUFFER, minX);
@@ -136,11 +213,22 @@ public class PepseGameManager extends GameManager {
     }
 
 
+    /**
+     * Updates the bounds for the terrain and trees.
+     * @param newMinX The new minimum x coordinate.
+     * @param newMaxX The new maximum x coordinate.
+     */
     private void updateBounds(int newMinX, int newMaxX) {
         minX = newMinX;
         maxX = newMaxX;
     }
 
+
+    /**
+     * Creates trees within the specified range.
+     * @param minX The minimum x coordinate.
+     * @param maxX The maximum x coordinate.
+     */
     private void createTreesInRange(int minX, int maxX) {
         List<Tree> newTrees = flora.createInRange(minX, maxX);
         for (Tree tree : newTrees) {
@@ -150,6 +238,16 @@ public class PepseGameManager extends GameManager {
         }
     }
 
+
+    /**
+     * Initializes the game by setting up the sky, terrain, night, sun, halo, energy display, and avatar.
+     * It also initializes the trees and sets the camera to follow the avatar.
+     *
+     * @param imageReader Used to read images from the disk.
+     * @param soundReader Used to read sound effects and background music from the disk.
+     * @param inputListener Used to receive user input from the keyboard and mouse.
+     * @param windowController Used to control the window properties such as dimensions.
+     */
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader, UserInputListener
             inputListener, WindowController windowController) {
@@ -165,7 +263,7 @@ public class PepseGameManager extends GameManager {
 
         //create - night
         night = Night.create(windowController.getWindowDimensions(), CYCLE_LENGTH);
-        gameObjects().addGameObject(night, Layer.FOREGROUND); // todo: ensure this is the correct layer
+        gameObjects().addGameObject(night, Layer.FOREGROUND);
 
         //create - sun
         sun = Sun.create(windowController.getWindowDimensions(), CYCLE_LENGTH);
@@ -176,15 +274,13 @@ public class PepseGameManager extends GameManager {
         gameObjects().addGameObject(sunHalo, Layer.BACKGROUND + 1);
 
         //create - energy
-        AvatarEnergy energy = new AvatarEnergy(new Vector2(100, 100), new Vector2(30, 30),
-                new TextRenderable("100"));
+        energy = new AvatarEnergy(new Vector2(100, 100), new Vector2(30, 30), new TextRenderable("100"));
         this.gameObjects().addGameObject(energy);
 
         // Compute initial avatar position
         float initialAvatarX = windowController.getWindowDimensions().x() / 2;
         float groundHeight = terrain.groundHeightAt(initialAvatarX);
-        Vector2 initialAvatarPosition = new Vector2(initialAvatarX, groundHeight - 30); // Assuming avatar
-        // height is 30
+        Vector2 initialAvatarPosition = new Vector2(initialAvatarX, groundHeight - 30);
         //create - avatar
         avatar = new Avatar(initialAvatarPosition, inputListener, imageReader, energy::changeEnergy);
         gameObjects().addGameObject(avatar, Layer.DEFAULT);
@@ -201,6 +297,11 @@ public class PepseGameManager extends GameManager {
                 windowController.getWindowDimensions(), windowController.getWindowDimensions()));
     }
 
+    /**
+     * The main method to start the Pepse game.
+     *
+     * @param args Command line arguments (not used).
+     */
     public static void main(String[] args) {
         new PepseGameManager().run();
     }

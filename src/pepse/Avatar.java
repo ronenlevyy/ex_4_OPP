@@ -119,7 +119,6 @@ public class Avatar extends GameObject {
         if (this.avatarEnergy < 0) {
             this.avatarEnergy = 0;
         }
-
         // Check for left and right movement and update energy
         if (inputListener.isKeyPressed(KeyEvent.VK_LEFT) && this.avatarEnergy > 0.5f) {
             xVel -= VELOCITY_X;
@@ -129,7 +128,6 @@ public class Avatar extends GameObject {
             xVel += VELOCITY_X;
             this.avatarEnergy -= 0.5f;
         }
-
         // Check if the avatar is jumping and update energy
         if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && getVelocity().y() == 0 && this.avatarEnergy >= 10.0f) {
             this.avatarEnergy -= 10f;
@@ -163,15 +161,10 @@ public class Avatar extends GameObject {
                 this.avatarEnergy += 1;
             }
         }
-        // Update the avatar's velocity
         transform().setVelocityX(xVel);
-
-        // Update the energy display
         stringEnergy.accept(Integer.toString((int) this.avatarEnergy));
-        // System.out.println(this.avatarEnergy);
+
     }
-
-
 
     /**
      * Creates the animations for the avatar using the provided image reader.
