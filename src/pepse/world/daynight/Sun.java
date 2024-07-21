@@ -29,8 +29,8 @@ public class Sun {
     /**
      * Creates a sun GameObject.
      *
-     * @param windowDimensions
-     * @param cycleLength
+     * @param windowDimensions The window dimensions.
+     * @param cycleLength      the cycle length of a full day
      * @return sun
      */
     public static GameObject create(Vector2 windowDimensions, float cycleLength) {

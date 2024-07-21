@@ -11,7 +11,7 @@ import pepse.PepseGameManager;
  * energy is restored, and the fruit reappears after a set cycle length.
  */
 public class FruitCollisionStrategy implements CollisionStrategy {
-    private Runnable setEnergy;
+    private final Runnable setEnergy;
     private boolean isEaten;
 
     //Constants

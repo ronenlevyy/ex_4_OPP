@@ -20,9 +20,9 @@ public class Flora {
     private static final float MIN_HEIGHT = 5.f;
     private static final float MAX_HEIGHT = 10.f;
 
-    private Terrain tet;
-    private Runnable setEnergy;
-    private Random rand;
+    private final Terrain tet;
+    private final Runnable setEnergy;
+    private final Random rand;
     private int leftmostTreeX = Integer.MAX_VALUE;
     private int rightmostTreeX = Integer.MIN_VALUE;
 
@@ -50,7 +50,7 @@ public class Flora {
      */
     public ArrayList<Tree> createInRange(int minX, int maxX) {
         ArrayList<Tree> treeList = new ArrayList<>();
-        int cols = (int) Math.floor((maxX - minX) / Block.SIZE); // the number of trees it is possible to add
+        int cols = (int) Math.floor((float) (maxX - minX) / Block.SIZE); // the number of trees it is possible to add
         if (minX % Block.SIZE != 0) {
             minX = minX - (minX % Block.SIZE);
         }

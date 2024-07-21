@@ -21,13 +21,12 @@ public class TreeTop implements CallbackAvatarJump {
     private static final int SIZE = 5;
     private static final int TREE_TOP_SIZE = 2;
 
-    private Vector2 topLeftCorner;
-    private Random rand;
+    private final Vector2 topLeftCorner;
+    private final Random rand;
     private List<Leaf> leaves;
     private List<Fruit> fruits;
-    private Runnable setEnergy;
-    private int treeHeight;
-    private boolean[][] is_occupied;
+    private final Runnable setEnergy;
+    private final boolean[][] is_occupied;
 
 
     /**
@@ -42,7 +41,6 @@ public class TreeTop implements CallbackAvatarJump {
         this.topLeftCorner = topLeftCorner.subtract(new Vector2(Block.SIZE, Block.SIZE).mult(TREE_TOP_SIZE))
                 .subtract(new Vector2(0, Block.SIZE * treeHeight));
         this.rand = rand;
-        this.treeHeight = treeHeight;
         this.setEnergy = setEnergy;
         this.is_occupied = new boolean[SIZE][SIZE];
         initOccupation();

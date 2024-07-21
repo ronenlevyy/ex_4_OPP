@@ -33,7 +33,7 @@ public class Night {
         night.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         night.setTag(NIGHT_TAG);
 
-        new Transition<Float>(night, // the game object being changed
+        new Transition<>(night, // the game object being changed
                 night.renderer()::setOpaqueness, // the method to call
                 INITIAL_VALUE, // initial transition value
                 MIDNIGHT_OPACITY,// final transition value

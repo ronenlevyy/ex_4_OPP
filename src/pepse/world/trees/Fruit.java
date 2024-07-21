@@ -33,7 +33,7 @@ public class Fruit extends GameObject implements CallbackAvatarJump {
         FRUIT_COLORS.add(Color.MAGENTA);
     }
 
-    private FruitCollisionStrategy collisionStrategy;
+    private final FruitCollisionStrategy collisionStrategy;
 
 
     /**

@@ -49,7 +49,7 @@ public class Leaf extends Block implements CallbackAvatarJump {
     public void swayLeaf() {
 
         // angle
-        new Transition<Float>(
+        new Transition<>(
                 this, // the game object being changed
                 (Float angle) -> renderer().setRenderableAngle(angle),// the method to call
                 INITIAL_VALUE_ANGLE, // initial transition value
@@ -77,7 +77,7 @@ public class Leaf extends Block implements CallbackAvatarJump {
      */
     @Override
     public void onJump() {
-        new Transition<Float>(
+        new Transition<>(
                 this, // the game object being changed
                 (Float angle) -> renderer().setRenderableAngle(angle), // the method to call
                 renderer().getRenderableAngle(), // initial transition value

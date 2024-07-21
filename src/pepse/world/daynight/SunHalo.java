@@ -25,8 +25,8 @@ public class SunHalo {
     /**
      * Creates a sun halo around the sun.
      *
-     * @param sun
-     * @return
+     * @param sun The sun GameObject.
+     * @return The sun halo GameObject.
      */
     public static GameObject create(GameObject sun) {
         GameObject sunHalo = new GameObject(Vector2.ZERO, sun.getDimensions().mult(HALO_MULTIPLIER),

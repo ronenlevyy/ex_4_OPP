@@ -45,7 +45,6 @@ public class PepseGameManager extends GameManager {
     private static final int INITIAL_TERRAIN_WIDTH = 1500;
     private static final Vector2 ENERGY_POSITION = new Vector2(100, 100); // Position of the energy display
     private static final Vector2 ENERGY_SIZE = new Vector2(30, 30); // Size of the energy display
-    private static final Vector2 INITIAL_AVATAR_OFFSET = new Vector2(0, 30); // Offset for the initial avatar
     // position
     private static final int TWO = 2;
     public static final String ENERGY_CAPACITY = "100";
@@ -65,19 +64,11 @@ public class PepseGameManager extends GameManager {
     private int minX = Integer.MAX_VALUE;
     private int maxX = Integer.MIN_VALUE;
 
-    /////////////////////////
-    // Static Game Objects //
-    /////////////////////////
-    private static GameObject night;
-    private static GameObject sun;
-    private static GameObject sunHalo;
-
     /**
      * Initializes the sky in the game world.
      */
     private void initializeSky() {
-        Sky sky = new Sky();
-        this.gameObjects().addGameObject(sky.create(windowController.getWindowDimensions()),
+        this.gameObjects().addGameObject(Sky.create(windowController.getWindowDimensions()),
                 Layer.BACKGROUND);
     }
 
@@ -287,15 +278,18 @@ public class PepseGameManager extends GameManager {
         initializeTerrain();
 
         //create - night
-        night = Night.create(windowController.getWindowDimensions(), CYCLE_LENGTH);
+        /////////////////////////
+        // Static Game Objects //
+        /////////////////////////
+        GameObject night = Night.create(windowController.getWindowDimensions(), CYCLE_LENGTH);
         gameObjects().addGameObject(night, Layer.FOREGROUND);
 
         //create - sun
-        sun = Sun.create(windowController.getWindowDimensions(), CYCLE_LENGTH);
+        GameObject sun = Sun.create(windowController.getWindowDimensions(), CYCLE_LENGTH);
         gameObjects().addGameObject(sun, Layer.BACKGROUND + 1);
 
         //create - halo
-        sunHalo = SunHalo.create(sun);
+        GameObject sunHalo = SunHalo.create(sun);
         gameObjects().addGameObject(sunHalo, Layer.BACKGROUND + 1);
 
         //create - energy

@@ -50,9 +50,9 @@ public class Avatar extends GameObject {
     private static final float FRAME_TIME = 0.1f;
 
 
-    private UserInputListener inputListener;
+    private final UserInputListener inputListener;
     private float avatarEnergy;
-    private boolean isJumping = false;
+    private boolean isJumping;
     private final List<CallbackAvatarJump> callbackJump;
 
     private AnimationRenderable noMoveAnimation;

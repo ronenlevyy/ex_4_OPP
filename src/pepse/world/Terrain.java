@@ -23,8 +23,8 @@ public class Terrain {
     private static final String TERRAIN_TAG = "ground";
     private static final int NOISE_SCALE = 4;
 
-    private NoiseGenerator noiseGenerator;
-    private float groundHeightAtX0;
+    private final NoiseGenerator noiseGenerator;
+    private final float groundHeightAtX0;
 
 
     /**

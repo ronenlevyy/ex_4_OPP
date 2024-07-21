@@ -15,12 +15,8 @@ import java.util.Random;
  * This class is responsible for creating the tree GameObject.
  */
 public class Tree implements CallbackAvatarJump {
-    private Vector2 topLeftCorner;
-    private int treeHeight;
-    private Random rand;
-    private List<Trunk> trunk;
-    private TreeTop treeTop;
-    private Runnable setEnergy;
+    private final List<Trunk> trunk;
+    private final TreeTop treeTop;
 
 
     /**
@@ -32,11 +28,6 @@ public class Tree implements CallbackAvatarJump {
      * @param setEnergy     A runnable to set the energy.
      */
     public Tree(Vector2 topLeftCorner, Random rand, int treeHeight, Runnable setEnergy) {
-        this.topLeftCorner = topLeftCorner;
-        this.rand = rand;
-        this.treeHeight = treeHeight;
-        this.setEnergy = setEnergy;
-
         this.trunk = new ArrayList<>();
         for (int i = 0; i < treeHeight; i++) {
             Vector2 placementVector = new Vector2(topLeftCorner.x(), topLeftCorner.y() - i * Block.SIZE);
