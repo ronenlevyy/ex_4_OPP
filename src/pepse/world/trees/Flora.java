@@ -13,13 +13,16 @@ import java.util.Random;
  * It uses a probability to determine where trees should be planted, ensuring a natural distribution.
  */
 public class Flora {
-    private Random rand;
+
+    // Constants
     private static final double TREE_PLANT_PROBABILITY = 0.1;
-    private Terrain tet;
-    private final Runnable setEnergy;
     private static final int MIN_DISTANCE_BETWEEN_TREES = 300;
     private static final float MIN_HEIGHT = 5.f;
     private static final float MAX_HEIGHT = 10.f;
+
+    private Terrain tet;
+    private Runnable setEnergy;
+    private Random rand;
     private int leftmostTreeX = Integer.MAX_VALUE;
     private int rightmostTreeX = Integer.MIN_VALUE;
 

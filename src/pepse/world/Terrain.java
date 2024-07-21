@@ -16,22 +16,25 @@ import java.util.List;
  * It uses Perlin noise to generate a realistic terrain.
  */
 public class Terrain {
-
+    // Constants
     private static final int TERRAIN_DEPTH = 20;
-    private NoiseGenerator noiseGenerator;
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
-    private float groundHeightAtX0 ;
-    private static final float GROUND_HEIGHT_MULTIPLIER = (float) 2/3;
+    private static final float GROUND_HEIGHT_MULTIPLIER = (float) 2 / 3;
+    private static final String TERRAIN_TAG = "ground";
+    private static final int NOISE_SCALE = 4;
+
+    private NoiseGenerator noiseGenerator;
+    private float groundHeightAtX0;
 
 
     /**
      * Constructs a new Terrain instance.
      *
      * @param windowDimensions The dimensions of the game window.
-     * @param seed The seed for the noise generator, used to generate terrain.
+     * @param seed             The seed for the noise generator, used to generate terrain.
      */
-    public Terrain(Vector2 windowDimensions, int seed){
-        this.groundHeightAtX0 = windowDimensions.y() *  GROUND_HEIGHT_MULTIPLIER;
+    public Terrain(Vector2 windowDimensions, int seed) {
+        this.groundHeightAtX0 = windowDimensions.y() * GROUND_HEIGHT_MULTIPLIER;
         this.noiseGenerator = new NoiseGenerator(seed, (int) groundHeightAtX0);
 
     }
@@ -44,10 +47,9 @@ public class Terrain {
      * @return The height of the ground at the given x-coordinate.
      */
     public float groundHeightAt(float x) {
-        float noise = (float) noiseGenerator.noise(x, Block.SIZE * 4);
+        float noise = (float) noiseGenerator.noise(x, Block.SIZE * NOISE_SCALE);
         return groundHeightAtX0 + noise;
     }
-
 
 
     /**
@@ -56,13 +58,12 @@ public class Terrain {
      * @param coordinate The top-left corner of the block's position.
      * @return A new Block instance.
      */
-    private Block createABlock(Vector2 coordinate){
+    private Block createABlock(Vector2 coordinate) {
         Renderable rectangleRenderable = new RectangleRenderable(ColorSupplier.approximateColor(BASE_GROUND_COLOR));
         Block block = new Block(coordinate, rectangleRenderable);
-        block.setTag("ground");
+        block.setTag(TERRAIN_TAG);
         return block;
     }
-
 
 
     /**

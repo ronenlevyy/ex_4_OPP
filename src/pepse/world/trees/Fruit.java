@@ -9,20 +9,20 @@ import pepse.CallbackAvatarJump;
 import pepse.util.ColorSupplier;
 import pepse.world.Block;
 import pepse.world.CollisionStrategies.FruitCollisionStrategy;
+
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
 
-
 /**
  * Represents a fruit in the game world. The fruit can change color on jump and has collision behavior with the avatar.
  */
 public class Fruit extends GameObject implements CallbackAvatarJump {
-    private static final float FRUIT_SIZE=Block.SIZE* 0.8f;
-    private static final Color FRUIT_COLOR= Color.RED;
-    private FruitCollisionStrategy collisionStrategy;
+    // Constants
+    private static final float FRUIT_SIZE = Block.SIZE * 0.8f;
+    private static final Color FRUIT_COLOR = Color.RED;
     private static final Set<Color> FRUIT_COLORS = new HashSet<>();
 
     static {
@@ -33,6 +33,8 @@ public class Fruit extends GameObject implements CallbackAvatarJump {
         FRUIT_COLORS.add(Color.MAGENTA);
     }
 
+    private FruitCollisionStrategy collisionStrategy;
+
 
     /**
      * Constructs a new Fruit instance.
@@ -40,8 +42,8 @@ public class Fruit extends GameObject implements CallbackAvatarJump {
      * @param topLeftCorner The top-left corner of the fruit's position.
      * @param setEnergy     The runnable to set the energy when the fruit is collected.
      */
-    public Fruit(Vector2 topLeftCorner, Runnable setEnergy){
-        super(topLeftCorner, new Vector2(FRUIT_SIZE,FRUIT_SIZE),new OvalRenderable(FRUIT_COLOR));
+    public Fruit(Vector2 topLeftCorner, Runnable setEnergy) {
+        super(topLeftCorner, new Vector2(FRUIT_SIZE, FRUIT_SIZE), new OvalRenderable(FRUIT_COLOR));
         this.collisionStrategy = new FruitCollisionStrategy(setEnergy);
     }
 
@@ -55,7 +57,7 @@ public class Fruit extends GameObject implements CallbackAvatarJump {
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-        if (other.getTag().equals("avatar")){
+        if (other.getTag().equals("avatar")) {
             collisionStrategy.onCollision(this, other);
 
         }

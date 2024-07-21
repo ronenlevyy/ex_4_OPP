@@ -7,9 +7,9 @@ import danogl.util.Vector2;
 import pepse.CallbackAvatarJump;
 import pepse.util.ColorSupplier;
 import pepse.world.Block;
+
 import java.awt.*;
 import java.util.Random;
-
 
 
 /**
@@ -17,8 +17,9 @@ import java.util.Random;
  * The leaf can sway and change dimensions over time and can spin when the avatar jumps.
  */
 public class Leaf extends Block implements CallbackAvatarJump {
-    private static final String LEAF_TAG ="leaf";
-    private static final Color LEAF_COLOR = new Color(50,200,30);
+    // Constants
+    private static final String LEAF_TAG = "leaf";
+    private static final Color LEAF_COLOR = new Color(50, 200, 30);
     private static final float INITIAL_VALUE_ANGLE = 0;
     private static final float FINAL_VALUE_ANGLE = 10;
     private static final float CYCLE_LENGTH = 3;
@@ -33,7 +34,7 @@ public class Leaf extends Block implements CallbackAvatarJump {
      *
      * @param topLeftCorner The top-left corner of the leaf's position.
      */
-    public Leaf(Vector2 topLeftCorner){
+    public Leaf(Vector2 topLeftCorner) {
         super(topLeftCorner, new RectangleRenderable(ColorSupplier.approximateColor(LEAF_COLOR)));
         Random rand = new Random();
         new ScheduledTask(this, rand.nextFloat(), false, this::swayLeaf);
@@ -45,7 +46,7 @@ public class Leaf extends Block implements CallbackAvatarJump {
      * Initiates the swaying motion of the leaf.
      * The leaf sways back and forth and changes its width over time.
      */
-    public void swayLeaf(){
+    public void swayLeaf() {
 
         // angle
         new Transition<Float>(
@@ -59,16 +60,16 @@ public class Leaf extends Block implements CallbackAvatarJump {
                 null
         );// nothing further to execute upon reaching final value
 
-    new Transition<>(
-            this, // the object to be related with the transition
-            this::setDimensions, // the function that will change the width
-            new Vector2(SIZE, SIZE), //initialized value
-            new Vector2(MAX_WIDTH, SIZE), //final value
-            Transition.CUBIC_INTERPOLATOR_VECTOR, // moving strategy
-            CYCLE_LENGTH, // cycle time
-            Transition.TransitionType.TRANSITION_BACK_AND_FORTH, // the transition type
-            null// the function to call
-    );
+        new Transition<>(
+                this, // the object to be related with the transition
+                this::setDimensions, // the function that will change the width
+                new Vector2(SIZE, SIZE), //initialized value
+                new Vector2(MAX_WIDTH, SIZE), //final value
+                Transition.CUBIC_INTERPOLATOR_VECTOR, // moving strategy
+                CYCLE_LENGTH, // cycle time
+                Transition.TransitionType.TRANSITION_BACK_AND_FORTH, // the transition type
+                null// the function to call
+        );
     }
 
     /**

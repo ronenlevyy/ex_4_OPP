@@ -15,7 +15,6 @@ import java.util.Random;
  * This class is responsible for creating the tree GameObject.
  */
 public class Tree implements CallbackAvatarJump {
-    private static final String treeTag = "tree";
     private Vector2 topLeftCorner;
     private int treeHeight;
     private Random rand;

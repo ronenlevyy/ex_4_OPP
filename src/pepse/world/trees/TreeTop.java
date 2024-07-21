@@ -14,18 +14,19 @@ import java.util.Random;
  * including the leaves and fruits in the game.
  */
 public class TreeTop implements CallbackAvatarJump {
-//    private static final int MAX_TOP_LEAVES = 10;
-//    private static final int MAX_TOP_FRUITS = 5;
-    private final Vector2 topLeftCorner;
-    private Random rand;
-    private List <Leaf> leaves;
-    private List <Fruit> fruits;
+
+    // Constants
     private static final double LEAF_PLANT_PROBABILITY = 0.7;
     private static final double FRUIT_PLANT_PROBABILITY = 0.5;
-    private static final int SIZE= 5;
-    private final Runnable setEnergy;
-    private final int treeHeight;
+    private static final int SIZE = 5;
     private static final int TREE_TOP_SIZE = 2;
+
+    private Vector2 topLeftCorner;
+    private Random rand;
+    private List<Leaf> leaves;
+    private List<Fruit> fruits;
+    private Runnable setEnergy;
+    private int treeHeight;
     private boolean[][] is_occupied;
 
 
@@ -37,9 +38,9 @@ public class TreeTop implements CallbackAvatarJump {
      * @param treeHeight    The height of the tree.
      * @param setEnergy     A runnable to set the energy.
      */
-    public TreeTop(Vector2 topLeftCorner, Random rand, int treeHeight, Runnable setEnergy){
-        this.topLeftCorner= topLeftCorner.subtract(new Vector2(Block.SIZE,Block.SIZE).mult(TREE_TOP_SIZE))
-        .subtract(new Vector2(0,Block.SIZE* treeHeight));
+    public TreeTop(Vector2 topLeftCorner, Random rand, int treeHeight, Runnable setEnergy) {
+        this.topLeftCorner = topLeftCorner.subtract(new Vector2(Block.SIZE, Block.SIZE).mult(TREE_TOP_SIZE))
+                .subtract(new Vector2(0, Block.SIZE * treeHeight));
         this.rand = rand;
         this.treeHeight = treeHeight;
         this.setEnergy = setEnergy;
@@ -54,10 +55,10 @@ public class TreeTop implements CallbackAvatarJump {
     /**
      * Initializes the occupation matrix for the tree top.
      */
-    private void initOccupation(){
-        for (int i=0; i<SIZE; i++){
-            for (int j=0; j<SIZE; j++){
-                this.is_occupied[i][j]=false;
+    private void initOccupation() {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                this.is_occupied[i][j] = false;
             }
         }
     }
@@ -66,9 +67,8 @@ public class TreeTop implements CallbackAvatarJump {
     /**
      * Creates the leaves of the tree top.
      */
-    public void createLeaves(){
+    public void createLeaves() {
         leaves = new ArrayList<>();
-        int leafCount = 0; //todo: erase
 
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
@@ -79,7 +79,6 @@ public class TreeTop implements CallbackAvatarJump {
                     Leaf leaf = new Leaf(leafPosition);
                     leaves.add(leaf);
                     is_occupied[i][j] = true;
-                    leafCount++;
                 }
             }
         }
@@ -89,38 +88,35 @@ public class TreeTop implements CallbackAvatarJump {
     /**
      * Creates the fruits of the tree top.
      */
-    public void createFruits(){
+    public void createFruits() {
         fruits = new ArrayList<>();
-        int fruitCount = 0;
-        for (int i=0; i< SIZE; i++){
-            for (int j=0; j< SIZE; j++){
-                if (rand.nextFloat() < FRUIT_PLANT_PROBABILITY && !is_occupied[i][j]){
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (rand.nextFloat() < FRUIT_PLANT_PROBABILITY && !is_occupied[i][j]) {
                     float x = topLeftCorner.x() + j * Block.SIZE;
                     float y = topLeftCorner.y() + i * Block.SIZE;
                     Vector2 fruitPosition = new Vector2(x, y);
                     Fruit fruit = new Fruit(fruitPosition, setEnergy);
                     fruits.add(fruit);
                     is_occupied[i][j] = true;
-                    fruitCount++;
                 }
             }
         }
 
     }
+
     /**
      * Returns the list of leaves.
-     *
      */
-    public List<Leaf> getLeaves(){
+    public List<Leaf> getLeaves() {
         return leaves;
     }
 
 
     /**
      * Returns the list of fruits.
-     *
      */
-    public List<Fruit> getFruits(){
+    public List<Fruit> getFruits() {
         return fruits;
     }
 
@@ -130,10 +126,10 @@ public class TreeTop implements CallbackAvatarJump {
      */
     @Override
     public void onJump() {
-        for (Leaf l : leaves){
+        for (Leaf l : leaves) {
             l.onJump();
         }
-        for (Fruit f : fruits){
+        for (Fruit f : fruits) {
             f.onJump();
         }
     }

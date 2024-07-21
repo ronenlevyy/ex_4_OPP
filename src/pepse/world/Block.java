@@ -11,13 +11,16 @@ import danogl.util.Vector2;
  */
 public class Block extends GameObject {
 
+    /**
+     * The size of a block in pixels.
+     */
     public static final int SIZE = 30;     // The size of a block in pixels.
 
     /**
      * Constructs a new Block instance.
      *
      * @param topLeftCorner The top-left corner of the block's position.
-     * @param renderable The renderable representing the block's appearance.
+     * @param renderable    The renderable representing the block's appearance.
      */
     public Block(Vector2 topLeftCorner, Renderable renderable) {
         super(topLeftCorner, Vector2.ONES.mult(SIZE), renderable);

@@ -31,11 +31,26 @@ public class PepseGameManager extends GameManager {
     ///////////////
     // Constants //
     ///////////////
+    /**
+     * The duration of a full day-night cycle, in seconds.
+     */
     public static final float CYCLE_LENGTH = 30;
+    /**
+     * The seed for the random number generator used to generate the terrain and trees.
+     */
     public static final int SEED = 0;
+
     private static final int TREE_CREATION_BUFFER = 70; // Create trees 70 pixels ahead
     private static final int BLOCK_SIZE = 30;
     private static final int INITIAL_TERRAIN_WIDTH = 1500;
+    private static final Vector2 ENERGY_POSITION = new Vector2(100, 100); // Position of the energy display
+    private static final Vector2 ENERGY_SIZE = new Vector2(30, 30); // Size of the energy display
+    private static final Vector2 INITIAL_AVATAR_OFFSET = new Vector2(0, 30); // Offset for the initial avatar
+    // position
+    private static final int TWO = 2;
+    public static final String ENERGY_CAPACITY = "100";
+    private static final float HALF = 0.5f;
+    private static final int THIRTY = 30;
 
     ////////////////////////
     // Instance Variables //
@@ -62,7 +77,7 @@ public class PepseGameManager extends GameManager {
      */
     private void initializeSky() {
         Sky sky = new Sky();
-        this.gameObjects().addGameObject(Sky.create(windowController.getWindowDimensions()),
+        this.gameObjects().addGameObject(sky.create(windowController.getWindowDimensions()),
                 Layer.BACKGROUND);
     }
 
@@ -84,8 +99,9 @@ public class PepseGameManager extends GameManager {
      * Updates the position of the energy display to be relative to the camera's x position.
      */
     private void updateEnergyPosition() {
-        float cameraX = avatar.getTopLeftCorner().x() - windowController.getWindowDimensions().x() / 2;
-        Vector2 energyPosition = new Vector2(cameraX + 100, 100); // 100 is the original y-coordinate
+        float cameraX = avatar.getTopLeftCorner().x() - windowController.getWindowDimensions().x() / TWO;
+        Vector2 energyPosition = new Vector2(cameraX + ENERGY_POSITION.x(), ENERGY_POSITION.y());
+        // 100 is the original y-coordinate
         energy.setTopLeftCorner(energyPosition);
     }
 
@@ -114,19 +130,21 @@ public class PepseGameManager extends GameManager {
 
     /**
      * Calculates the new bounds for the terrain based on the avatar's position.
+     *
      * @return An array containing the new minimum and maximum x coordinates.
      */
     private int[] calculateNewBounds() {
         float avatarX = avatar.getTopLeftCorner().x();
         int avatarBlockX = (int) Math.floor(avatarX / BLOCK_SIZE) * BLOCK_SIZE;
-        int newMinX = avatarBlockX - INITIAL_TERRAIN_WIDTH / 2;
-        int newMaxX = avatarBlockX + INITIAL_TERRAIN_WIDTH / 2;
+        int newMinX = avatarBlockX - INITIAL_TERRAIN_WIDTH / TWO;
+        int newMaxX = avatarBlockX + INITIAL_TERRAIN_WIDTH / TWO;
         return new int[]{newMinX, newMaxX};
     }
 
 
     /**
      * Updates the terrain blocks within the new bounds.
+     *
      * @param newMinX The new minimum x coordinate.
      * @param newMaxX The new maximum x coordinate.
      */
@@ -138,6 +156,7 @@ public class PepseGameManager extends GameManager {
 
     /**
      * Creates new terrain blocks within the specified range.
+     *
      * @param newMinX The new minimum x coordinate.
      * @param newMaxX The new maximum x coordinate.
      */
@@ -153,8 +172,9 @@ public class PepseGameManager extends GameManager {
 
     /**
      * Creates blocks within the specified range.
+     *
      * @param start The starting x coordinate.
-     * @param end The ending x coordinate.
+     * @param end   The ending x coordinate.
      */
     private void createBlocksInRange(int start, int end) {
         for (int x = start; x < end; x += BLOCK_SIZE) {
@@ -171,6 +191,7 @@ public class PepseGameManager extends GameManager {
 
     /**
      * Removes old terrain blocks outside the specified range.
+     *
      * @param newMinX The new minimum x coordinate.
      * @param newMaxX The new maximum x coordinate.
      */
@@ -182,8 +203,9 @@ public class PepseGameManager extends GameManager {
 
     /**
      * Removes blocks outside the specified range.
+     *
      * @param start The starting x coordinate.
-     * @param end The ending x coordinate.
+     * @param end   The ending x coordinate.
      */
     private void removeBlocksOutsideRange(int start, int end) {
         for (int x = start; x < end; x += BLOCK_SIZE) {
@@ -200,6 +222,7 @@ public class PepseGameManager extends GameManager {
 
     /**
      * Creates new trees within the specified range.
+     *
      * @param newMinX The new minimum x coordinate.
      * @param newMaxX The new maximum x coordinate.
      */
@@ -215,6 +238,7 @@ public class PepseGameManager extends GameManager {
 
     /**
      * Updates the bounds for the terrain and trees.
+     *
      * @param newMinX The new minimum x coordinate.
      * @param newMaxX The new maximum x coordinate.
      */
@@ -226,6 +250,7 @@ public class PepseGameManager extends GameManager {
 
     /**
      * Creates trees within the specified range.
+     *
      * @param minX The minimum x coordinate.
      * @param maxX The maximum x coordinate.
      */
@@ -243,9 +268,9 @@ public class PepseGameManager extends GameManager {
      * Initializes the game by setting up the sky, terrain, night, sun, halo, energy display, and avatar.
      * It also initializes the trees and sets the camera to follow the avatar.
      *
-     * @param imageReader Used to read images from the disk.
-     * @param soundReader Used to read sound effects and background music from the disk.
-     * @param inputListener Used to receive user input from the keyboard and mouse.
+     * @param imageReader      Used to read images from the disk.
+     * @param soundReader      Used to read sound effects and background music from the disk.
+     * @param inputListener    Used to receive user input from the keyboard and mouse.
      * @param windowController Used to control the window properties such as dimensions.
      */
     @Override
@@ -274,13 +299,13 @@ public class PepseGameManager extends GameManager {
         gameObjects().addGameObject(sunHalo, Layer.BACKGROUND + 1);
 
         //create - energy
-        energy = new AvatarEnergy(new Vector2(100, 100), new Vector2(30, 30), new TextRenderable("100"));
+        energy = new AvatarEnergy(ENERGY_POSITION, ENERGY_SIZE, new TextRenderable(ENERGY_CAPACITY));
         this.gameObjects().addGameObject(energy);
 
         // Compute initial avatar position
-        float initialAvatarX = windowController.getWindowDimensions().x() / 2;
+        float initialAvatarX = windowController.getWindowDimensions().x() / TWO;
         float groundHeight = terrain.groundHeightAt(initialAvatarX);
-        Vector2 initialAvatarPosition = new Vector2(initialAvatarX, groundHeight - 30);
+        Vector2 initialAvatarPosition = new Vector2(initialAvatarX, groundHeight - THIRTY);
         //create - avatar
         avatar = new Avatar(initialAvatarPosition, inputListener, imageReader, energy::changeEnergy);
         gameObjects().addGameObject(avatar, Layer.DEFAULT);
@@ -293,7 +318,7 @@ public class PepseGameManager extends GameManager {
 
 
         setCamera(new Camera(avatar,
-                windowController.getWindowDimensions().mult(0.5f).subtract(initialAvatarPosition),
+                windowController.getWindowDimensions().mult(HALF).subtract(initialAvatarPosition),
                 windowController.getWindowDimensions(), windowController.getWindowDimensions()));
     }
 

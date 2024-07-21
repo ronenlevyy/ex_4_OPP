@@ -6,7 +6,6 @@ import danogl.gui.UserInputListener;
 import danogl.gui.rendering.AnimationRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import pepse.world.trees.Tree;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -38,21 +37,23 @@ public class Avatar extends GameObject {
     private static final String RUN_4_IMAGE = "assets/run_4.png";
     private static final String RUN_5_IMAGE = "assets/run_5.png";
 
-
-
+    // Constants
     private static final float START_ENERGY = 100;
     private static final float VELOCITY_X = 400;
     private static final float VELOCITY_Y = -650;
     private static final float GRAVITY = 600;
-    private boolean isJumping = false;
-    private final List<CallbackAvatarJump> callbackJump;
     private static final String AVATAR_TAG = "avatar";
+    private static final int FACTOR_50 = 50;
+    private static final int AVATAR_ENERGY = 100;
+    private static final float TEN = 10.0f;
+    private static final float HALF = 0.5f;
+    private static final float FRAME_TIME = 0.1f;
 
 
     private UserInputListener inputListener;
     private float avatarEnergy;
-
-
+    private boolean isJumping = false;
+    private final List<CallbackAvatarJump> callbackJump;
 
     private AnimationRenderable noMoveAnimation;
     private AnimationRenderable jumpAnimation;
@@ -64,12 +65,13 @@ public class Avatar extends GameObject {
      *
      * @param topLeftCorner The initial position of the avatar.
      * @param inputListener Listener for user input to control the avatar.
-     * @param imageReader Reader to load images for the avatar animations.
-     * @param stringEnergy Callback to update the energy display.
+     * @param imageReader   Reader to load images for the avatar animations.
+     * @param stringEnergy  Callback to update the energy display.
      */
     public Avatar(Vector2 topLeftCorner, UserInputListener inputListener,
                   ImageReader imageReader, Consumer<String> stringEnergy) {
-        super(topLeftCorner, Vector2.ONES.mult(50), imageReader.readImage("assets/idle_0.png", false));
+        super(topLeftCorner, Vector2.ONES.mult(FACTOR_50), imageReader.readImage(NO_MOVEMENT_IDLE_0_IMAGE,
+                false));
         this.inputListener = inputListener;
         this.stringEnergy = stringEnergy;
         this.avatarEnergy = START_ENERGY;
@@ -82,6 +84,11 @@ public class Avatar extends GameObject {
 
     }
 
+    /**
+     * Updates the avatar's state based on user input and the current game state.
+     *
+     * @param deltaTime Time since the last update.
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
@@ -96,11 +103,11 @@ public class Avatar extends GameObject {
      * @param newEnergy The new energy value to set.
      */
     public void setEnergy(float newEnergy) {
-        if (this.avatarEnergy + newEnergy <= 100) {
+        if (this.avatarEnergy + newEnergy <= AVATAR_ENERGY) {
             this.avatarEnergy += newEnergy;
 
         } else {
-            this.avatarEnergy = 100;
+            this.avatarEnergy = AVATAR_ENERGY;
         }
         stringEnergy.accept(Integer.toString((int) this.avatarEnergy));
     }
@@ -113,32 +120,28 @@ public class Avatar extends GameObject {
         float xVel = 0;
 
         // Ensure the energy stays within the range [0, 100]
-        if (this.avatarEnergy > 100) {
-            this.avatarEnergy = 100;
+        if (this.avatarEnergy > AVATAR_ENERGY) {
+            this.avatarEnergy = AVATAR_ENERGY;
         }
         if (this.avatarEnergy < 0) {
             this.avatarEnergy = 0;
         }
         // Check for left and right movement and update energy
-        if (inputListener.isKeyPressed(KeyEvent.VK_LEFT) && this.avatarEnergy > 0.5f) {
+        if (inputListener.isKeyPressed(KeyEvent.VK_LEFT) && this.avatarEnergy > HALF) {
             xVel -= VELOCITY_X;
-            this.avatarEnergy -= 0.5f;
+            this.avatarEnergy -= HALF;
         }
-        if (inputListener.isKeyPressed(KeyEvent.VK_RIGHT) && this.avatarEnergy > 0.5f) {
+        if (inputListener.isKeyPressed(KeyEvent.VK_RIGHT) && this.avatarEnergy > HALF) {
             xVel += VELOCITY_X;
-            this.avatarEnergy -= 0.5f;
+            this.avatarEnergy -= HALF;
         }
         // Check if the avatar is jumping and update energy
-        if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && getVelocity().y() == 0 && this.avatarEnergy >= 10.0f) {
+        if (inputListener.isKeyPressed(KeyEvent.VK_SPACE) && getVelocity().y() == 0 && this.avatarEnergy >= TEN) {
             this.avatarEnergy -= 10f;
             this.isJumping = true;
             renderer().setRenderable(this.jumpAnimation);
             transform().setVelocityY(VELOCITY_Y);
-
-            // Call the onJump method of each CallbackAvatarJump object
-            for (CallbackAvatarJump callback : callbackJump) {
-                callback.onJump();
-            }
+            onJump();
 
         } else if (getVelocity().y() == 0) {
             this.isJumping = false;
@@ -149,13 +152,10 @@ public class Avatar extends GameObject {
             renderer().setRenderable(this.jumpAnimation);
         } else if (xVel != 0) {
             renderer().setRenderable(this.runAnimation);
-        }
-        else if(xVel == 0 && ((inputListener.isKeyPressed(KeyEvent.VK_LEFT) ||
-                inputListener.isKeyPressed(KeyEvent.VK_RIGHT)))){
+        } else if (xVel == 0 && ((inputListener.isKeyPressed(KeyEvent.VK_LEFT) ||
+                inputListener.isKeyPressed(KeyEvent.VK_RIGHT)))) {
             renderer().setRenderable(this.noMoveAnimation);
-        }
-        else
-        {
+        } else {
             renderer().setRenderable(this.noMoveAnimation);
             if (this.avatarEnergy < START_ENERGY) {
                 this.avatarEnergy += 1;
@@ -163,6 +163,7 @@ public class Avatar extends GameObject {
         }
         transform().setVelocityX(xVel);
         stringEnergy.accept(Integer.toString((int) this.avatarEnergy));
+
 
     }
 
@@ -177,14 +178,14 @@ public class Avatar extends GameObject {
                 NO_MOVEMENT_IDLE_1_IMAGE,
                 NO_MOVEMENT_IDLE_2_IMAGE,
                 NO_MOVEMENT_IDLE_3_IMAGE
-        }, 0.1f);
+        }, FRAME_TIME);
 
         this.jumpAnimation = createAnimationRenderable(imageReader, new String[]{
                 JUMP_0_IMAGE,
                 JUMP_1_IMAGE,
                 JUMP_2_IMAGE,
                 JUMP_3_IMAGE
-        }, 0.1f);
+        }, FRAME_TIME);
 
         this.runAnimation = createAnimationRenderable(imageReader, new String[]{
                 RUN_0_IMAGE,
@@ -193,15 +194,15 @@ public class Avatar extends GameObject {
                 RUN_3_IMAGE,
                 RUN_4_IMAGE,
                 RUN_5_IMAGE
-        }, 0.1f);
+        }, FRAME_TIME);
     }
 
 
     /**
      * Creates an AnimationRenderable from the given image paths and frame duration.
      *
-     * @param imageReader Reader to load images.
-     * @param imagePaths Array of image paths for the animation frames.
+     * @param imageReader   Reader to load images.
+     * @param imagePaths    Array of image paths for the animation frames.
      * @param frameDuration Duration of each frame in the animation.
      * @return A new AnimationRenderable instance.
      */
@@ -219,7 +220,6 @@ public class Avatar extends GameObject {
     }
 
 
-
     /**
      * Adds a jump callback to the list of callbacks.
      */
@@ -228,14 +228,6 @@ public class Avatar extends GameObject {
             callback.onJump();
         }
     }
-
-    /**
-     * Removes a jump callback from the list of callbacks.
-     *
-     * @param tree The callback to remove.
-     */
-    public void removeJumpCallback(Tree tree) {
-        callbackJump.remove(tree);
-    }
 }
+
 

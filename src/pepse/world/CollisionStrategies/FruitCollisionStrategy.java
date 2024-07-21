@@ -10,10 +10,12 @@ import pepse.PepseGameManager;
  * When the avatar collides with a fruit, the fruit is "eaten" (made invisible),
  * energy is restored, and the fruit reappears after a set cycle length.
  */
-public class FruitCollisionStrategy implements CollisionStrategy{
+public class FruitCollisionStrategy implements CollisionStrategy {
     private Runnable setEnergy;
     private boolean isEaten;
-    private static final float CYCLE_LENGTH= PepseGameManager.CYCLE_LENGTH;
+
+    //Constants
+    private static final float CYCLE_LENGTH = PepseGameManager.CYCLE_LENGTH;
 
 
     /**
@@ -21,7 +23,7 @@ public class FruitCollisionStrategy implements CollisionStrategy{
      *
      * @param setEnergy A Runnable that sets the energy of the avatar.
      */
-    public FruitCollisionStrategy(Runnable setEnergy){
+    public FruitCollisionStrategy(Runnable setEnergy) {
         this.setEnergy = setEnergy;
         this.isEaten = false;
     }
@@ -37,7 +39,7 @@ public class FruitCollisionStrategy implements CollisionStrategy{
      */
     @Override
     public void onCollision(GameObject firstObject, GameObject secondObject) {
-        if (!isEaten){
+        if (!isEaten) {
             isEaten = true;
 
             firstObject.physics().preventIntersectionsFromDirection(null);
@@ -45,7 +47,7 @@ public class FruitCollisionStrategy implements CollisionStrategy{
 
             setEnergy.run();
 
-            new ScheduledTask(firstObject,CYCLE_LENGTH , false, () -> {
+            new ScheduledTask(firstObject, CYCLE_LENGTH, false, () -> {
                 firstObject.renderer().setOpaqueness(1f); // make the fruit visible
                 firstObject.physics().preventIntersectionsFromDirection(Vector2.ZERO);
                 isEaten = false;
