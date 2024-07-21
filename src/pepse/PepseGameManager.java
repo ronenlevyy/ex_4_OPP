@@ -33,7 +33,7 @@ public class PepseGameManager extends GameManager {
     ///////////////
     public static final float CYCLE_LENGTH = 30;
     public static final int SEED = 0;
-    private static final int TREE_CREATION_BUFFER = 200; // Create trees 200 pixels ahead
+    private static final int TREE_CREATION_BUFFER = 70; // Create trees 70 pixels ahead
     private static final int BLOCK_SIZE = 30;
     private static final int INITIAL_TERRAIN_WIDTH = 1500;
 
