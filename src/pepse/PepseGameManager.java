@@ -1,6 +1,6 @@
 package pepse;
 
-import danogl.GameManager; // ודא שיש לך את ההפניה הנכונה ל-GameManager
+import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
 import danogl.gui.ImageReader;
@@ -10,7 +10,9 @@ import danogl.gui.WindowController;
 import danogl.gui.rendering.Camera;
 import danogl.gui.rendering.TextRenderable;
 import danogl.util.Vector2;
-import pepse.world.*;
+import pepse.world.Block;
+import pepse.world.Sky;
+import pepse.world.Terrain;
 import pepse.world.daynight.Night;
 import pepse.world.daynight.Sun;
 import pepse.world.daynight.SunHalo;
@@ -25,23 +27,19 @@ public class PepseGameManager extends GameManager {
      * The length of the day-night cycle in seconds.
      */
     public static final float CYCLE_LENGTH = 30;
-
-    private ImageReader imageReader;
-    private SoundReader soundReader;
-    private UserInputListener inputListener;
-    private WindowController windowController;
+    public static final int SEED = 0;
+    private static final int TREE_CREATION_BUFFER = 200; // Create trees 200 pixels ahead
+    private static final int BLOCK_SIZE = 30;
+    private static final int INITIAL_TERRAIN_WIDTH = 1500;
     private static GameObject night;
     private static GameObject sun;
     private static GameObject sunHalo;
     private static Avatar avatar;
-    public static final int SEED = 0;
-    private static final int TREE_CREATION_BUFFER = 200; // Create trees 500 pixels ahead
+    private ImageReader imageReader;
+    private SoundReader soundReader;
+    private UserInputListener inputListener;
+    private WindowController windowController;
     private Flora flora;
-
-
-    ///todo- in order to make infinite world we need this
-    private static final int BLOCK_SIZE = 30;
-    private static final int INITIAL_TERRAIN_WIDTH = 1500;
     private int minX = Integer.MAX_VALUE;
     private int maxX = Integer.MIN_VALUE;
     private Terrain terrain;
@@ -50,29 +48,27 @@ public class PepseGameManager extends GameManager {
 
     //////////////////////////////////////////////////////
 
+    public static void main(String[] args) {
+        new PepseGameManager().run();
+    }
 
     private void initializeSky() {
         Sky sky = new Sky();
-        this.gameObjects().addGameObject(sky.create(windowController.getWindowDimensions()),
+        this.gameObjects().addGameObject(Sky.create(windowController.getWindowDimensions()),
                 Layer.BACKGROUND);
 
     }
-
 
     private void initializeTerrain() {
         terrain = new Terrain(windowController.getWindowDimensions(), SEED);
         List<Block> blockList = terrain.createInRange(0, (int) windowController.getWindowDimensions().x());
         for (Block block : blockList) {
             gameObjects().addGameObject(block, Layer.STATIC_OBJECTS);
-            createdBlocks.computeIfAbsent((int) block.getTopLeftCorner().x(),
-                    k -> new ArrayList<>()).add(block);
+            createdBlocks.computeIfAbsent((int) block.getTopLeftCorner().x(), k -> new ArrayList<>()).add(block);
         }
         minX = 0;
         maxX = (int) windowController.getWindowDimensions().x();
-
-
     }
-
 
     @Override
     public void update(float deltaTime) {
@@ -81,12 +77,10 @@ public class PepseGameManager extends GameManager {
 
     }
 
-
     private void updateTerrain() {
         int[] newBounds = calculateNewBounds();
         updateTerrainBlocks(newBounds[0], newBounds[1]);
-        createNewTrees(newBounds[1]);
-        removeOldTrees(newBounds[0]); // Ensure this line is present
+        createNewTrees(newBounds[0], newBounds[1]);
         updateBounds(newBounds[0], newBounds[1]);
     }
 
@@ -141,40 +135,21 @@ public class PepseGameManager extends GameManager {
         }
     }
 
-
-    private void createNewTrees(int newX) {
-        if (newX < minX) {
-            createTreesInRange(newX, minX);
+    private void createNewTrees(int newMinX, int newMaxX) {
+        if (newMinX < minX) {
+            System.out.println("newMinX: " + newMinX + ", newMaxX: " + newMaxX + ", minX: " + minX + ", maxX: " + maxX);
+            createTreesInRange(newMinX - TREE_CREATION_BUFFER, minX);
         }
-
-        if (newX > maxX) {
-            createTreesInRange(maxX, newX + TREE_CREATION_BUFFER);
-        }
-
-    }
-
-    private void removeOldTrees(int newMinX) {
-        Iterator<Tree> iterator = treeList.iterator();
-        while (iterator.hasNext()) {
-            Tree tree = iterator.next();
-            if (tree.getTopLeftCorner().x() < newMinX - TREE_CREATION_BUFFER) {
-                tree.removeTree(gameObjects());
-                avatar.removeJumpCallback(tree);
-                iterator.remove();
-            }
-        }
-
-        if (!treeList.isEmpty()) {
-            Tree lastTree = treeList.get(treeList.size() - 1);
-            flora.setLastTreeX((int) lastTree.getTopLeftCorner().x());
+        if (newMaxX > maxX) {
+            createTreesInRange(maxX, newMaxX + TREE_CREATION_BUFFER);
         }
     }
+
 
     private void updateBounds(int newMinX, int newMaxX) {
         minX = newMinX;
         maxX = newMaxX;
     }
-
 
     private void createTreesInRange(int minX, int maxX) {
         List<Tree> newTrees = flora.createInRange(minX, maxX);
@@ -185,10 +160,9 @@ public class PepseGameManager extends GameManager {
         }
     }
 
-
     @Override
-    public void initializeGame(ImageReader imageReader, SoundReader soundReader, UserInputListener
-            inputListener, WindowController windowController) {
+    public void initializeGame(ImageReader imageReader, SoundReader soundReader,
+                               UserInputListener inputListener, WindowController windowController) {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
         this.imageReader = imageReader;
         this.soundReader = soundReader;
@@ -198,10 +172,6 @@ public class PepseGameManager extends GameManager {
 
         //create - sky
         initializeSky();
-
-        // Initialize terrain boundaries
-//    minX = Integer.MAX_VALUE;
-//    maxX = Integer.MIN_VALUE;
 
         //create - ground
         initializeTerrain();
@@ -236,17 +206,12 @@ public class PepseGameManager extends GameManager {
         flora = new Flora(SEED, terrain, () -> avatar.setEnergy(AvatarEnergy.FRUIT_ENERGY));
         treeList = new ArrayList<>();
         // Initial tree creation
-        createTreesInRange(0, (int) windowController.getWindowDimensions().x());
+        createTreesInRange(minX, maxX);
 
 
         setCamera(new Camera(avatar,
                 windowController.getWindowDimensions().mult(0.5f).subtract(initialAvatarPosition),
                 windowController.getWindowDimensions(), windowController.getWindowDimensions()));
-    }
-
-
-    public static void main(String[] args) {
-        new PepseGameManager().run();
     }
 
 

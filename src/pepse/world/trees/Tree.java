@@ -90,4 +90,12 @@ public class Tree implements CallbackAvatarJump {
 
 
     }
+
+    public void setTopLeftCorner(Vector2 vector2) {
+        this.topLeftCorner = vector2;
+    }
+
+    public float getTreeHeight() {
+        return treeHeight;
+    }
 }
