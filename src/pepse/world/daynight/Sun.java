@@ -1,6 +1,7 @@
 package pepse.world.daynight;
 
 import danogl.GameObject;
+import danogl.components.CoordinateSpace;
 import danogl.components.Transition;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.util.Vector2;
@@ -39,6 +40,8 @@ public class Sun {
 
         Vector2 initialSunCenter = new Vector2(windowDimensions.x() / TWO, windowDimensions.y() / THREE);
         Vector2 cycleCenter = new Vector2(windowDimensions.x() / TWO, windowDimensions.y() * (TWO / THREE));
+        sun.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
+
 
         new Transition<>(
                 sun, // the game object being changed
@@ -54,4 +57,6 @@ public class Sun {
 
         return sun;
     }
+
+
 }

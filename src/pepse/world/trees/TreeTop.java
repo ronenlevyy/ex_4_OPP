@@ -1,7 +1,7 @@
 package pepse.world.trees;
 
 import danogl.util.Vector2;
-import pepse.CallbackAvatarJump;
+import pepse.world.AvatarManager.CallbackAvatarJump;
 import pepse.world.Block;
 
 import java.util.ArrayList;

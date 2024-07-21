@@ -1,6 +1,7 @@
 package pepse.world.daynight;
 
 import danogl.GameObject;
+import danogl.components.CoordinateSpace;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.util.Vector2;
 
@@ -33,6 +34,7 @@ public class SunHalo {
                 new OvalRenderable(SUN_HALO_COLOR));
         sunHalo.addComponent((deltaTime -> sunHalo.setCenter(sun.getCenter())));
         sunHalo.setTag(SUN_HALO_TAG);
+        sunHalo.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         return sunHalo;
     }
 }

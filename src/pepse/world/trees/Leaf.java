@@ -4,7 +4,7 @@ import danogl.components.ScheduledTask;
 import danogl.components.Transition;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
-import pepse.CallbackAvatarJump;
+import pepse.world.AvatarManager.CallbackAvatarJump;
 import pepse.util.ColorSupplier;
 import pepse.world.Block;
 

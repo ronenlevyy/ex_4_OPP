@@ -1,4 +1,4 @@
-package pepse;
+package pepse.world.AvatarManager;
 
 import danogl.GameObject;
 import danogl.gui.rendering.TextRenderable;

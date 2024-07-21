@@ -3,6 +3,7 @@ package pepse;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
+import danogl.components.Transition;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
@@ -10,6 +11,8 @@ import danogl.gui.WindowController;
 import danogl.gui.rendering.Camera;
 import danogl.gui.rendering.TextRenderable;
 import danogl.util.Vector2;
+import pepse.world.Avatar;
+import pepse.world.AvatarManager.AvatarEnergy;
 import pepse.world.Block;
 import pepse.world.Sky;
 import pepse.world.Terrain;
@@ -63,6 +66,7 @@ public class PepseGameManager extends GameManager {
     private Map<Integer, List<Block>> createdBlocks;
     private int minX = Integer.MAX_VALUE;
     private int maxX = Integer.MIN_VALUE;
+
 
     /**
      * Initializes the sky in the game world.
@@ -287,6 +291,7 @@ public class PepseGameManager extends GameManager {
         //create - sun
         GameObject sun = Sun.create(windowController.getWindowDimensions(), CYCLE_LENGTH);
         gameObjects().addGameObject(sun, Layer.BACKGROUND + 1);
+
 
         //create - halo
         GameObject sunHalo = SunHalo.create(sun);

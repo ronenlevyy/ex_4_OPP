@@ -1,4 +1,4 @@
-package pepse;
+package pepse.world.AvatarManager;
 
 /**
  * This interface defines a callback mechanism for when the avatar jumps.

@@ -5,7 +5,7 @@ import danogl.collisions.Collision;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import pepse.CallbackAvatarJump;
+import pepse.world.AvatarManager.CallbackAvatarJump;
 import pepse.util.ColorSupplier;
 import pepse.world.Block;
 import pepse.world.CollisionStrategies.FruitCollisionStrategy;
