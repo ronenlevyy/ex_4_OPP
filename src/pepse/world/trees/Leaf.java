@@ -7,10 +7,15 @@ import danogl.util.Vector2;
 import pepse.CallbackAvatarJump;
 import pepse.util.ColorSupplier;
 import pepse.world.Block;
-
 import java.awt.*;
 import java.util.Random;
 
+
+
+/**
+ * Represents a leaf in the game world.
+ * The leaf can sway and change dimensions over time and can spin when the avatar jumps.
+ */
 public class Leaf extends Block implements CallbackAvatarJump {
     private static final String LEAF_TAG ="leaf";
     private static final Color LEAF_COLOR = new Color(50,200,30);
@@ -22,6 +27,12 @@ public class Leaf extends Block implements CallbackAvatarJump {
     private static final float SIZE = 28;
     private static final float MAX_WIDTH = 33;
 
+
+    /**
+     * Constructs a new Leaf instance.
+     *
+     * @param topLeftCorner The top-left corner of the leaf's position.
+     */
     public Leaf(Vector2 topLeftCorner){
         super(topLeftCorner, new RectangleRenderable(ColorSupplier.approximateColor(LEAF_COLOR)));
         Random rand = new Random();
@@ -29,6 +40,11 @@ public class Leaf extends Block implements CallbackAvatarJump {
         setTag(LEAF_TAG);
     }
 
+
+    /**
+     * Initiates the swaying motion of the leaf.
+     * The leaf sways back and forth and changes its width over time.
+     */
     public void swayLeaf(){
 
         // angle
@@ -53,10 +69,11 @@ public class Leaf extends Block implements CallbackAvatarJump {
             Transition.TransitionType.TRANSITION_BACK_AND_FORTH, // the transition type
             null// the function to call
     );
-
     }
 
-
+    /**
+     * Spins the leaf when the avatar jumps.
+     */
     @Override
     public void onJump() {
         new Transition<Float>(

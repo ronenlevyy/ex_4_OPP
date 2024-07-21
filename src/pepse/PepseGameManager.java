@@ -21,43 +21,32 @@ import java.util.*;
 
 
 public class PepseGameManager extends GameManager {
-    /**
-     * The length of the day-night cycle in seconds.
-     */
-    public static final float CYCLE_LENGTH = 30;
 
-    private ImageReader imageReader;
-    private SoundReader soundReader;
-    private UserInputListener inputListener;
+
+    private static final int TREE_CREATION_BUFFER = 200; // Create trees 500 pixels ahead
+    public static final float CYCLE_LENGTH = 30;
+    private static final int BLOCK_SIZE = 30;
+    private static final int INITIAL_TERRAIN_WIDTH = 1500;
     private WindowController windowController;
     private static GameObject night;
     private static GameObject sun;
     private static GameObject sunHalo;
     private static Avatar avatar;
     public static final int SEED = 0;
-    private static final int TREE_CREATION_BUFFER = 200; // Create trees 500 pixels ahead
     private Flora flora;
 
-
-    ///todo- in order to make infinite world we need this
-    private static final int BLOCK_SIZE = 30;
-    private static final int INITIAL_TERRAIN_WIDTH = 1500;
     private int minX = Integer.MAX_VALUE;
     private int maxX = Integer.MIN_VALUE;
     private Terrain terrain;
     private Map<Integer, List<Block>> createdBlocks;
     private List<Tree> treeList;
 
-    //////////////////////////////////////////////////////
-
 
     private void initializeSky() {
         Sky sky = new Sky();
         this.gameObjects().addGameObject(sky.create(windowController.getWindowDimensions()),
                 Layer.BACKGROUND);
-
     }
-
 
     private void initializeTerrain() {
         terrain = new Terrain(windowController.getWindowDimensions(), SEED);
@@ -69,10 +58,7 @@ public class PepseGameManager extends GameManager {
         }
         minX = 0;
         maxX = (int) windowController.getWindowDimensions().x();
-
-
     }
-
 
     @Override
     public void update(float deltaTime) {
@@ -80,7 +66,6 @@ public class PepseGameManager extends GameManager {
         updateTerrain();
 
     }
-
 
     private void updateTerrain() {
         int[] newBounds = calculateNewBounds();
@@ -190,18 +175,11 @@ public class PepseGameManager extends GameManager {
     public void initializeGame(ImageReader imageReader, SoundReader soundReader, UserInputListener
             inputListener, WindowController windowController) {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
-        this.imageReader = imageReader;
-        this.soundReader = soundReader;
-        this.inputListener = inputListener;
         this.windowController = windowController;
         createdBlocks = new HashMap<>();
 
         //create - sky
         initializeSky();
-
-        // Initialize terrain boundaries
-//    minX = Integer.MAX_VALUE;
-//    maxX = Integer.MIN_VALUE;
 
         //create - ground
         initializeTerrain();
@@ -244,10 +222,7 @@ public class PepseGameManager extends GameManager {
                 windowController.getWindowDimensions(), windowController.getWindowDimensions()));
     }
 
-
     public static void main(String[] args) {
         new PepseGameManager().run();
     }
-
-
 }
